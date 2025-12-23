@@ -4,25 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <link rel="apple-touch-icon" href="https://img.icons8.com/color/180/hamburger.png">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/plasticine/180/hamburger.png">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="吃貨神器">
 
-    <title>吃貨神器 Pro Max</title>
     <style>
-        :root { --primary: #FF9500; --bg: #FFFFFF; } /* 背景改為全白，更現代 */
-        
-        /* 解決 iPhone 劉海屏黑邊關鍵：viewport-fit=cover */
+        :root { 
+            --primary: #FF9500; 
+            --bg: #FFFFFF; 
+        }
+
+        /* 4. 解決上方黑邊的最強 CSS 方案 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg); /* 強制背景與網頁同色 */
+            height: 100%;
+        }
+
         body { 
             font-family: -apple-system, sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            padding: env(safe-area-inset-top) 20px 20px 20px; /* 自動適應劉海高度 */
+            /* env(safe-area-inset-top) 會自動偵測並填充劉海區域的空間 */
+            padding-top: env(safe-area-inset-top); 
             display: flex; 
-            justify-content: center; 
-            min-height: 100vh;
+            justify-content: center;
             box-sizing: border-box;
         }
 
@@ -30,27 +37,11 @@
             background: white; 
             width: 100%; 
             max-width: 450px; 
-            padding-top: 20px;
+            padding: 20px;
+            padding-bottom: env(safe-area-inset-bottom);
         }
         
-        /* 其餘樣式保持不變... */
-        .input-group { display: flex; gap: 8px; margin-bottom: 15px; }
-        input { flex: 1; border: 1.5px solid #D1D1D6; border-radius: 12px; padding: 12px; font-size: 16px; outline: none; }
-        .add-btn { background: var(--primary); color: white; border: none; padding: 0 15px; border-radius: 12px; font-weight: bold; }
-        .tabs { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
-        .tab { white-space: nowrap; padding: 8px 16px; background: #F2F2F7; border-radius: 20px; font-size: 14px; cursor: pointer; }
-        .tab.active { background: var(--primary); color: white; }
-        .result-card { background: #FFF9F0; border: 2px dashed var(--primary); border-radius: 20px; padding: 30px 10px; text-align: center; margin-bottom: 20px; }
-        #resultValue { font-size: 38px; font-weight: bold; color: #FF4500; min-height: 50px; }
-        .search-options { display: none; margin-top: 15px; border-top: 1px solid #EEE; padding-top: 15px; }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .btn { border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; color: white; }
-        .main-btn { background: #1C1C1E; width: 100%; font-size: 20px; }
-        .btn-meituan { background: #FFD000; color: #333; }
-        .btn-dianping { background: #FF6633; }
-        .btn-eleme { background: #0089FF; }
-        .btn-google { background: #34A853; }
-        .btn-share { background: #5856D6; grid-column: span 2; }
+        /* ... 其他樣式保持不變 ... */
     </style>
 </head>
 <body>
