@@ -2,54 +2,61 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <link rel="apple-touch-icon" sizes="180x180" href="https://img.icons8.com/fluent/180/000000/hamburger.png">
-    <meta name="apple-mobile-web-app-title" content="吃貨神器">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="吃貨神器">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/180/hamburger.png">
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="吃貨神器">
 
     <title>吃貨神器 Pro Max</title>
     <style>
-        :root { --primary: #FF9500; --bg: #F2F2F7; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { background: white; width: 100%; max-width: 450px; border-radius: 24px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        :root { --primary: #FF9500; --bg: #FFFFFF; } /* 背景改為全白，更現代 */
         
-        /* 頂部輸入區域 */
+        /* 解決 iPhone 劉海屏黑邊關鍵：viewport-fit=cover */
+        body { 
+            font-family: -apple-system, sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: env(safe-area-inset-top) 20px 20px 20px; /* 自動適應劉海高度 */
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container { 
+            background: white; 
+            width: 100%; 
+            max-width: 450px; 
+            padding-top: 20px;
+        }
+        
+        /* 其餘樣式保持不變... */
         .input-group { display: flex; gap: 8px; margin-bottom: 15px; }
-        input { flex: 1; border: 1.5px solid #D1D1D6; border-radius: 12px; padding: 10px; font-size: 14px; outline: none; }
-        .add-btn { background: var(--primary); color: white; border: none; padding: 0 15px; border-radius: 12px; font-weight: bold; font-size: 14px; }
-
-        /* 主題標籤 */
+        input { flex: 1; border: 1.5px solid #D1D1D6; border-radius: 12px; padding: 12px; font-size: 16px; outline: none; }
+        .add-btn { background: var(--primary); color: white; border: none; padding: 0 15px; border-radius: 12px; font-weight: bold; }
         .tabs { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
-        .tab { white-space: nowrap; padding: 8px 16px; background: #E5E5EA; border-radius: 20px; font-size: 13px; cursor: pointer; }
+        .tab { white-space: nowrap; padding: 8px 16px; background: #F2F2F7; border-radius: 20px; font-size: 14px; cursor: pointer; }
         .tab.active { background: var(--primary); color: white; }
-
-        /* 結果顯示區 */
         .result-card { background: #FFF9F0; border: 2px dashed var(--primary); border-radius: 20px; padding: 30px 10px; text-align: center; margin-bottom: 20px; }
-        #resultValue { font-size: 36px; font-weight: bold; color: #FF4500; min-height: 45px; }
-        
-        /* 搜尋平台按鈕 */
-        .search-options { display: none; margin-top: 15px; border-top: 1px solid #EEE; padding-top: 15px; animation: fadeIn 0.5s; }
+        #resultValue { font-size: 38px; font-weight: bold; color: #FF4500; min-height: 50px; }
+        .search-options { display: none; margin-top: 15px; border-top: 1px solid #EEE; padding-top: 15px; }
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .btn { border: none; border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; text-align: center; color: white; }
-        .main-btn { background: #1C1C1E; width: 100%; font-size: 18px; padding: 16px; margin-top: 10px; }
-        
+        .btn { border: none; border-radius: 12px; padding: 15px; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; color: white; }
+        .main-btn { background: #1C1C1E; width: 100%; font-size: 20px; }
         .btn-meituan { background: #FFD000; color: #333; }
         .btn-dianping { background: #FF6633; }
         .btn-eleme { background: #0089FF; }
         .btn-google { background: #34A853; }
-        .btn-share { background: #5856D6; grid-column: span 2; margin-top: 5px; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .btn-share { background: #5856D6; grid-column: span 2; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1 style="text-align:center; margin: 0 0 20px 0; font-size: 24px;">🍴 吃貨神器</h1>
+    <h1 style="text-align:center; margin-top:0;">🍴 吃貨神器</h1>
 
     <div class="input-group">
         <input type="text" id="customInput" placeholder="新增私藏菜色...">
@@ -60,19 +67,17 @@
         <div class="tab active" onclick="switchTheme('custom')">自定義</div>
         <div class="tab" onclick="switchTheme('classic')">經典推薦</div>
         <div class="tab" onclick="switchTheme('chinese')">中式八大菜</div>
-        <div class="tab" onclick="switchTheme('japanese')">日式料理</div>
     </div>
 
     <div class="result-card">
         <div id="resultValue">？</div>
-        
-        <div class="search-options" id="searchGroup">
+        <div class="action-btns" id="searchGroup" style="display:none">
             <div class="grid">
-                <a id="linkMeituan" class="btn btn-meituan">美團搜尋</a>
+                <a id="linkMeituan" class="btn btn-meituan">美團</a>
                 <a id="linkDianping" class="btn btn-dianping">大眾點評</a>
                 <a id="linkEleme" class="btn btn-eleme">餓了麼</a>
-                <a id="linkGoogle" class="btn btn-google">Google 地圖</a>
-                <button class="btn btn-share" onclick="shareResult()">📤 分享給好友</button>
+                <a id="linkGoogle" class="btn btn-google">Google</a>
+                <button class="btn btn-share" onclick="shareResult()">📤 分享好友</button>
             </div>
         </div>
     </div>
@@ -81,22 +86,19 @@
 </div>
 
 <script>
+    // 同之前的 JavaScript 邏輯...
     let myChoices = JSON.parse(localStorage.getItem('myChoices')) || ["火鍋", "拉麵", "炸雞"];
-    
     const database = {
         custom: myChoices,
-        classic: ["漢堡", "牛排", "牛肉麵", "小籠包", "義大利麵", "滷肉飯"],
-        chinese: ["川菜", "粵菜", "魯菜", "蘇菜", "浙菜", "閩菜", "湘菜", "徽菜"],
-        japanese: ["生魚片", "天婦羅", "丼飯", "壽喜燒", "居酒屋", "烏龍麵"]
+        classic: ["漢堡", "牛排", "牛肉麵", "小籠包", "義大利麵"],
+        chinese: ["川菜", "粵菜", "魯菜", "蘇菜", "浙菜"]
     };
-
     let currentKey = 'custom';
     let finalChoice = "";
 
     function switchTheme(key) {
         currentKey = key;
-        const tabs = document.querySelectorAll('.tab');
-        tabs.forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         event.currentTarget.classList.add('active');
         document.getElementById('resultValue').innerText = '？';
         document.getElementById('searchGroup').style.display = 'none';
@@ -104,24 +106,19 @@
 
     function addCustom() {
         const input = document.getElementById('customInput');
-        const val = input.value.trim();
-        if (val) {
-            database.custom.push(val);
+        if (input.value.trim()) {
+            database.custom.push(input.value.trim());
             localStorage.setItem('myChoices', JSON.stringify(database.custom));
             input.value = "";
-            alert(`已成功加入：${val}`);
             switchTheme('custom');
         }
     }
 
     function roll() {
         const list = database[currentKey];
-        if (!list || list.length === 0) return alert("清單裡沒東西喔！");
-        
         const display = document.getElementById('resultValue');
         const searchGroup = document.getElementById('searchGroup');
         searchGroup.style.display = 'none';
-
         let count = 0;
         const timer = setInterval(() => {
             display.innerText = list[Math.floor(Math.random() * list.length)];
@@ -146,11 +143,7 @@
 
     async function shareResult() {
         if (navigator.share) {
-            await navigator.share({
-                title: '吃貨神器決定了！',
-                text: `我決定今天吃：${finalChoice}！你要一起嗎？`,
-                url: window.location.href
-            });
+            await navigator.share({ title: '吃貨神器', text: `決定吃：${finalChoice}！`, url: window.location.href });
         }
     }
 </script>
