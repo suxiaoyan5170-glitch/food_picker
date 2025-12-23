@@ -3,52 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>吃貨神器 Pro</title>
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3443/3443338.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>吃貨神器 Pro Max</title>
     <style>
         :root { --primary: #FF9500; --bg: #F2F2F7; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
         .container { background: white; width: 100%; max-width: 450px; border-radius: 24px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         
-        /* 輸入區域 */
-        .input-group { display: flex; gap: 8px; margin-bottom: 20px; }
-        input { flex: 1; border: 1.5px solid #D1D1D6; border-radius: 12px; padding: 10px; font-size: 16px; outline: none; }
-        .add-btn { background: var(--primary); color: white; border: none; padding: 0 15px; border-radius: 12px; font-weight: bold; }
-
-        .tabs { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; }
-        .tab { white-space: nowrap; padding: 8px 16px; background: #E5E5EA; border-radius: 20px; font-size: 14px; cursor: pointer; }
-        .tab.active { background: var(--primary); color: white; }
-
-        .result-card { background: #FFF9F0; border: 2px dashed var(--primary); border-radius: 20px; padding: 30px 10px; text-align: center; margin-bottom: 20px; }
-        #resultValue { font-size: 38px; font-weight: bold; color: #FF4500; min-height: 50px; }
+        .result-card { background: #FFF9F0; border: 2px dashed var(--primary); border-radius: 20px; padding: 30px 10px; text-align: center; margin: 20px 0; }
+        #resultValue { font-size: 38px; font-weight: bold; color: #FF4500; }
         
-        .action-btns { display: none; flex-direction: column; gap: 10px; margin-top: 15px; }
-        .btn { border: none; border-radius: 12px; padding: 15px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; color: white; }
-        .main-btn { background: #1C1C1E; width: 100%; font-size: 20px; }
-        .map-btn { background: #007AFF; }
-        .share-btn { background: #5856D6; } /* 紫色分享鈕 */
+        /* 搜尋平台選擇器樣式 */
+        .search-options { display: none; margin-top: 15px; border-top: 1px solid #EEE; padding-top: 15px; }
+        .search-title { font-size: 14px; color: #888; margin-bottom: 10px; font-weight: bold; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        
+        .btn { border: none; border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; text-align: center; color: white; transition: 0.2s; }
+        .main-btn { background: #1C1C1E; width: 100%; font-size: 20px; padding: 18px; }
+        
+        /* 各大平台顏色 */
+        .btn-meituan { background: #FFD000; color: #333; } /* 美團黃 */
+        .btn-dianping { background: #FF6633; } /* 大眾點評橘 */
+        .btn-eleme { background: #0089FF; } /* 餓了麼藍 */
+        .btn-google { background: #34A853; } /* Google 綠 */
+        .btn-share { background: #5856D6; grid-column: span 2; } /* 分享鈕佔滿 */
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1 style="text-align:center; margin-top:0;">🍴 吃貨神器 Pro</h1>
-
-    <div class="input-group">
-        <input type="text" id="customInput" placeholder="想吃什麼？(例: 酸菜魚)">
-        <button class="add-btn" onclick="addCustom()">新增</button>
-    </div>
-
-    <div class="tabs" id="tabGroup">
-        <div class="tab active" onclick="switchTheme('custom')">我的清單</div>
-        <div class="tab" onclick="switchTheme('classic')">經典推薦</div>
-        <div class="tab" onclick="switchTheme('japanese')">日式料理</div>
-    </div>
+    <h1 style="text-align:center; margin-top:0;">🍴 吃貨神器</h1>
 
     <div class="result-card">
         <div id="resultValue">？</div>
-        <div class="action-btns" id="actionGroup">
-            <a id="mapLink" class="btn map-btn" target="_blank">📍 搜尋附近餐廳</a>
-            <button class="btn share-btn" onclick="shareResult()">📤 分享到其他 App</button>
+        
+        <div class="search-options" id="searchGroup">
+            <div class="search-title">選擇搜尋平台</div>
+            <div class="grid">
+                <a id="linkMeituan" class="btn btn-meituan">美團</a>
+                <a id="linkDianping" class="btn btn-dianping">大眾點評</a>
+                <a id="linkEleme" class="btn btn-eleme">餓了麼</a>
+                <a id="linkGoogle" class="btn btn-google">Google 地圖</a>
+                <button class="btn btn-share" onclick="shareResult()">📤 分享給好友</button>
+            </div>
         </div>
     </div>
 
@@ -56,79 +55,44 @@
 </div>
 
 <script>
-    // 初始化自定義清單
-    let customList = JSON.parse(localStorage.getItem('myChoices')) || ["火鍋", "拉麵"];
-    
-    const database = {
-        custom: customList,
-        classic: ["漢堡", "炸雞", "牛排", "牛肉麵", "小籠包", "義大利麵"],
-        japanese: ["生魚片", "天婦羅", "丼飯", "壽喜燒", "居酒屋"]
-    };
-
-    let currentKey = 'custom';
+    const foodList = ["麻辣火鍋", "酸菜魚", "螺絲粉", "日式拉麵", "韓式炸雞", "牛肉麵", "小籠包"];
     let finalChoice = "";
 
-    function switchTheme(key) {
-        currentKey = key;
-        const tabs = document.querySelectorAll('.tab');
-        tabs.forEach(t => t.classList.remove('active'));
-        event.target.classList.add('active');
-        document.getElementById('resultValue').innerText = '？';
-        document.getElementById('actionGroup').style.display = 'none';
-    }
-
-    function addCustom() {
-        const input = document.getElementById('customInput');
-        const val = input.value.trim();
-        if (val) {
-            database.custom.push(val);
-            localStorage.setItem('myChoices', JSON.stringify(database.custom));
-            input.value = "";
-            switchTheme('custom');
-            alert(`已加入：${val}`);
-        }
-    }
-
     function roll() {
-        const list = database[currentKey];
-        if (list.length === 0) return alert("清單是空的！");
-
-        const resultDisplay = document.getElementById('resultValue');
-        const actionGroup = document.getElementById('actionGroup');
-        actionGroup.style.display = 'none';
+        const display = document.getElementById('resultValue');
+        const searchGroup = document.getElementById('searchGroup');
+        searchGroup.style.display = 'none';
 
         let count = 0;
         const timer = setInterval(() => {
-            resultDisplay.innerText = list[Math.floor(Math.random() * list.length)];
+            display.innerText = foodList[Math.floor(Math.random() * foodList.length)];
             count++;
             if (count > 15) {
                 clearInterval(timer);
-                finalChoice = list[Math.floor(Math.random() * list.length)];
-                resultDisplay.innerText = "✨ " + finalChoice;
-                
-                document.getElementById('mapLink').href = `https://www.google.com/maps/search/${finalChoice}+餐廳`;
-                actionGroup.style.display = 'flex';
+                finalChoice = foodList[Math.floor(Math.random() * foodList.length)];
+                display.innerText = "✨ " + finalChoice;
+                updateSearchLinks(finalChoice);
+                searchGroup.style.display = 'block';
             }
         }, 80);
     }
 
-    // --- 全方位分享功能 ---
-    async function shareResult() {
-        const shareData = {
-            title: '吃貨神器決定了！',
-            text: `我決定今天吃：${finalChoice}！你要一起嗎？`,
-            url: window.location.href
-        };
+    function updateSearchLinks(keyword) {
+        const encoded = encodeURIComponent(keyword);
+        // 各大 App 的 URL Schemes
+        document.getElementById('linkMeituan').href = `imeituan://www.meituan.com/s/s?w=${encoded}`;
+        document.getElementById('linkDianping').href = `dianping://search?keyword=${encoded}`;
+        document.getElementById('linkEleme').href = `eleme://search?keyword=${encoded}`;
+        document.getElementById('linkGoogle').href = `https://www.google.com/maps/search/${encoded}`;
+    }
 
-        try {
-            // 檢查瀏覽器是否支援 Web Share API (手機 Safari 支援)
-            if (navigator.share) {
-                await navigator.share(shareData);
-            } else {
-                alert("你的瀏覽器不支援原生分享，建議使用 iPhone Safari 開啟。");
-            }
-        } catch (err) {
-            console.log('Error:', err);
+    async function shareResult() {
+        if (navigator.share) {
+            await navigator.share({
+                title: '吃貨神器決定了！',
+                text: `今天就決定吃：${finalChoice}！`,
+                url: window.location.href
+            });
         }
     }
 </script>
