@@ -1,55 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>視覺系選擇器</title>
+    <title>吃貨神器 Pro</title>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #F2F2F7; margin: 0; display: flex; justify-content: center; padding: 20px; }
-        .container { background: white; width: 100%; max-width: 400px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
-        h1 { font-size: 22px; margin-bottom: 20px; }
-        .result-box { background: #FFF9F0; border: 2px dashed #FF9500; border-radius: 15px; padding: 30px 10px; margin: 20px 0; min-height: 80px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-        #resultValue { font-size: 32px; font-weight: bold; color: #FF9500; }
-        .main-btn { background: #1C1C1E; color: white; border: none; padding: 18px; border-radius: 15px; font-size: 18px; font-weight: bold; width: 100%; cursor: pointer; }
-        .line-btn { display: none; margin-top: 15px; color: #06C755; text-decoration: none; font-weight: bold; border: 1px solid #06C755; padding: 10px; border-radius: 10px; }
+        :root { --primary: #FF9500; --bg: #F2F2F7; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { background: white; width: 100%; max-width: 450px; border-radius: 24px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        
+        /* 輸入區域 */
+        .input-group { display: flex; gap: 8px; margin-bottom: 20px; }
+        input { flex: 1; border: 1.5px solid #D1D1D6; border-radius: 12px; padding: 10px; font-size: 16px; outline: none; }
+        .add-btn { background: var(--primary); color: white; border: none; padding: 0 15px; border-radius: 12px; font-weight: bold; }
+
+        .tabs { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; }
+        .tab { white-space: nowrap; padding: 8px 16px; background: #E5E5EA; border-radius: 20px; font-size: 14px; cursor: pointer; }
+        .tab.active { background: var(--primary); color: white; }
+
+        .result-card { background: #FFF9F0; border: 2px dashed var(--primary); border-radius: 20px; padding: 30px 10px; text-align: center; margin-bottom: 20px; }
+        #resultValue { font-size: 38px; font-weight: bold; color: #FF4500; min-height: 50px; }
+        
+        .action-btns { display: none; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .btn { border: none; border-radius: 12px; padding: 15px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; color: white; }
+        .main-btn { background: #1C1C1E; width: 100%; font-size: 20px; }
+        .map-btn { background: #007AFF; }
+        .share-btn { background: #5856D6; } /* 紫色分享鈕 */
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🍴 視覺系選擇器</h1>
-    <div class="result-box">
-        <div id="resultValue">準備好了嗎？</div>
-        <a id="lineShare" class="line-btn" target="_blank">💬 分享結果</a>
+    <h1 style="text-align:center; margin-top:0;">🍴 吃貨神器 Pro</h1>
+
+    <div class="input-group">
+        <input type="text" id="customInput" placeholder="想吃什麼？(例: 酸菜魚)">
+        <button class="add-btn" onclick="addCustom()">新增</button>
     </div>
-    <button class="main-btn" onclick="roll()">開始隨機抽選</button>
-    <p style="font-size: 12px; color: #888; margin-top: 20px;">提示：點擊按鈕即可抽籤</p>
+
+    <div class="tabs" id="tabGroup">
+        <div class="tab active" onclick="switchTheme('custom')">我的清單</div>
+        <div class="tab" onclick="switchTheme('classic')">經典推薦</div>
+        <div class="tab" onclick="switchTheme('japanese')">日式料理</div>
+    </div>
+
+    <div class="result-card">
+        <div id="resultValue">？</div>
+        <div class="action-btns" id="actionGroup">
+            <a id="mapLink" class="btn map-btn" target="_blank">📍 搜尋附近餐廳</a>
+            <button class="btn share-btn" onclick="shareResult()">📤 分享到其他 App</button>
+        </div>
+    </div>
+
+    <button class="main-btn btn" onclick="roll()">開始隨機抽選</button>
 </div>
 
 <script>
-    const foodList = ["麻辣鍋", "迴轉壽司", "炸雞漢堡", "日式拉麵", "牛肉麵", "小籠包", "燒肉定食"];
+    // 初始化自定義清單
+    let customList = JSON.parse(localStorage.getItem('myChoices')) || ["火鍋", "拉麵"];
+    
+    const database = {
+        custom: customList,
+        classic: ["漢堡", "炸雞", "牛排", "牛肉麵", "小籠包", "義大利麵"],
+        japanese: ["生魚片", "天婦羅", "丼飯", "壽喜燒", "居酒屋"]
+    };
+
+    let currentKey = 'custom';
+    let finalChoice = "";
+
+    function switchTheme(key) {
+        currentKey = key;
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('resultValue').innerText = '？';
+        document.getElementById('actionGroup').style.display = 'none';
+    }
+
+    function addCustom() {
+        const input = document.getElementById('customInput');
+        const val = input.value.trim();
+        if (val) {
+            database.custom.push(val);
+            localStorage.setItem('myChoices', JSON.stringify(database.custom));
+            input.value = "";
+            switchTheme('custom');
+            alert(`已加入：${val}`);
+        }
+    }
 
     function roll() {
+        const list = database[currentKey];
+        if (list.length === 0) return alert("清單是空的！");
+
         const resultDisplay = document.getElementById('resultValue');
-        const shareBtn = document.getElementById('lineShare');
-        shareBtn.style.display = 'none';
+        const actionGroup = document.getElementById('actionGroup');
+        actionGroup.style.display = 'none';
 
         let count = 0;
         const timer = setInterval(() => {
-            resultDisplay.innerText = foodList[Math.floor(Math.random() * foodList.length)];
+            resultDisplay.innerText = list[Math.floor(Math.random() * list.length)];
             count++;
-            if (count > 12) {
+            if (count > 15) {
                 clearInterval(timer);
-                const final = foodList[Math.floor(Math.random() * foodList.length)];
-                resultDisplay.innerText = "✨ " + final;
+                finalChoice = list[Math.floor(Math.random() * list.length)];
+                resultDisplay.innerText = "✨ " + finalChoice;
                 
-                const message = encodeURIComponent(`今天就吃：${final}！`);
-                shareBtn.href = `https://line.me/R/msg/text/?${message}`;
-                shareBtn.style.display = 'block';
+                document.getElementById('mapLink').href = `https://www.google.com/maps/search/${finalChoice}+餐廳`;
+                actionGroup.style.display = 'flex';
             }
         }, 80);
     }
-</script>
 
+    // --- 全方位分享功能 ---
+    async function shareResult() {
+        const shareData = {
+            title: '吃貨神器決定了！',
+            text: `我決定今天吃：${finalChoice}！你要一起嗎？`,
+            url: window.location.href
+        };
+
+        try {
+            // 檢查瀏覽器是否支援 Web Share API (手機 Safari 支援)
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                alert("你的瀏覽器不支援原生分享，建議使用 iPhone Safari 開啟。");
+            }
+        } catch (err) {
+            console.log('Error:', err);
+        }
+    }
+</script>
 </body>
 </html>
