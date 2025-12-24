@@ -144,7 +144,7 @@
             history: JSON.parse(localStorage.getItem('p_hist')) || []
         },
         dice: { list: ["1", "2", "3", "4", "5", "6"] },
-        truth: { list: ["最後一張照片", "最醜的一件事", "初吻幾歲", "現場對視"] },
+        truth: { list: ["最後一張照片", "最尷尬的回憶", "心跳最快的一次", "現場對視10秒"] },
         dare: { list: ["學貓叫", "給第三人發訊息", "大聲唱歌", "做深蹲"] }
     };
 
@@ -220,6 +220,8 @@
             list = db[currentPage].list;
         }
 
+        if(!list || list.length === 0) { alert("清單是空的喔！"); return; }
+
         const resEl = document.getElementById('resultText');
         const actionEl = document.getElementById('actionGrid');
         actionEl.style.display = 'none';
@@ -240,8 +242,6 @@
     function showActions() {
         const grid = document.getElementById('actionGrid');
         grid.style.display = 'grid';
-        
-        // 切換按鈕顯示
         document.querySelectorAll('.food-only').forEach(el => el.style.display = (currentPage === 'food' ? 'block' : 'none'));
         document.querySelectorAll('.play-only').forEach(el => el.style.display = (currentPage === 'play' ? 'block' : 'none'));
 
@@ -252,7 +252,7 @@
         }
     }
 
-     // 5. 地圖深度連結 (修正後的高德、百度跳轉)
+    // 5. 地圖深度連結與跳轉修復
     function showMapOptions() {
         document.getElementById('mapModal').style.display = 'block';
         document.getElementById('overlay').style.display = 'block';
@@ -268,7 +268,6 @@
         let appUrl = '';
         let webUrl = '';
 
-        // 根據地圖類型設定不同的 App 協議與網頁備案
         switch(type) {
             case 'google': 
                 appUrl = `comgooglemaps://?q=${q}`; 
@@ -279,37 +278,24 @@
                 webUrl = `http://maps.apple.com/?q=${q}`;
                 break;
             case 'gaode': 
-                // iOS 使用 iosamap://, Android 會自動識別關鍵字搜尋
                 appUrl = `iosamap://search?sourceApplication=foodapp&keywords=${q}&style=2`;
                 webUrl = `https://uri.amap.com/search?keyword=${q}`;
                 break;
             case 'baidu': 
-                // 百度搜尋接口
                 appUrl = `baidumap://map/search?query=${q}&src=webapp.food.decision`;
                 webUrl = `https://api.map.baidu.com/geocoder?address=${q}&output=html`;
                 break;
         }
         
-        // 嘗試喚起 App
         const startTime = Date.now();
         window.location.href = appUrl;
 
-        // 保險機制：如果 2 秒後沒離開頁面，代表沒裝 App 或跳轉失敗，改開網頁版
         setTimeout(() => {
             if (Date.now() - startTime < 2500) {
                 window.location.href = webUrl;
             }
         }, 2000);
 
-        closeMapOptions();
-    }
-
-        
-        // 嘗試打開 App，失敗則跳轉 Web 版
-        window.location.href = url;
-        setTimeout(() => {
-            if(type==='google') window.location.href = `https://www.google.com/maps/search/${q}`;
-        }, 500);
         closeMapOptions();
     }
 
