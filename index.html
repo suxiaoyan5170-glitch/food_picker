@@ -27,20 +27,19 @@
         .tab-item.active { background: var(--primary); color: white; font-weight: bold; }
         .result-container { background: #FFF; border: 2.5px dashed var(--primary); border-radius: 28px; padding: 40px 15px; text-align: center; margin: 15px 0; min-height: 80px; }
         .result-text { font-size: 38px; font-weight: 800; color: #FF4500; }
-        .main-roll-btn { background: #1C1C1E; color: white; border: none; width: 100%; padding: 20px; border-radius: 18px; font-size: 20px; font-weight: bold; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .main-roll-btn { background: #1C1C1E; color: white; border: none; width: 100%; padding: 20px; border-radius: 18px; font-size: 20px; font-weight: bold; box-shadow: 0 10px 25px rgba(0,0,0,0.1); cursor: pointer; }
         .action-grid { display: none; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-        .option-btn { padding: 14px; border-radius: 12px; color: white; font-size: 14px; text-align: center; font-weight: bold; border:none; }
+        .option-btn { padding: 14px; border-radius: 12px; color: white; font-size: 14px; text-align: center; font-weight: bold; border:none; text-decoration: none; cursor: pointer; }
         .history-box { margin-top: 25px; text-align: left; }
         .history-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
         .tag { background: #E5E5EA; padding: 6px 12px; border-radius: 10px; font-size: 13px; }
         .tag.remove::after { content: '×'; margin-left: 5px; color: #999; }
         .page { display: none; }
         .active-page { display: block; }
-        
-        /* 隱藏彈窗樣式 */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 999; }
+        .map-modal { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-radius: 24px 24px 0 0; padding: 20px; box-sizing: border-box; z-index: 1000; }
+        .map-option { padding: 15px; border-bottom: 1px solid #EEE; text-align: center; font-size: 18px; color: var(--blue); font-weight: 500; }
         .admin-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; background: white; border-radius: 24px; padding: 20px; box-shadow: 0 0 50px rgba(0,0,0,0.3); z-index: 2000; }
-        .admin-modal h3 { margin-top: 0; font-size: 18px; }
-        .list-area { margin-top: 15px; max-height: 200px; overflow-y: auto; }
         .admin-tag { display: inline-block; padding: 5px 10px; border-radius: 8px; margin: 3px; font-size: 12px; color: white; }
     </style>
 </head>
@@ -85,7 +84,7 @@
             <a id="linkM" class="option-btn food-only" style="background:#FFD000;color:#333">美團</a>
             <a id="linkD" class="option-btn food-only" style="background:#FF6633">點評</a>
             <button class="option-btn play-only" style="background:#007AFF; grid-column: span 2;" onclick="showMapOptions()">打開地圖導航</button>
-            <button class="option-btn" style="background:#5856D6; grid-column: span 2;" onclick="shareCurrent()">分享結果</button>
+            <button class="option-btn" id="shareBtn" style="background:#5856D6; grid-column: span 2;" onclick="shareCurrent()">分享結果</button>
         </div>
         <div class="history-box">
             <div id="historyTitle" style="font-weight: bold; color: #8E8E93;">最近抽中</div>
@@ -95,34 +94,33 @@
 
     <div class="overlay" id="overlay" onclick="closeModals()"></div>
     <div class="map-modal" id="mapModal">
+        <div style="font-weight: bold; margin-bottom: 15px; color:#666; text-align: center;">選擇地圖應用</div>
         <div class="map-option" onclick="openMap('google')">Google Maps</div>
+        <div class="map-option" onclick="openMap('apple')">Apple Maps</div>
         <div class="map-option" onclick="openMap('gaode')">高德地圖</div>
         <div class="map-option" onclick="openMap('baidu')">百度地圖</div>
-        <div class="map-option" style="color:var(--red)" onclick="closeModals()">取消</div>
+        <div class="map-option" style="color:var(--red); border:none" onclick="closeModals()">取消</div>
     </div>
 
     <div class="admin-modal" id="adminModal">
-        <h3>🤫 權限控制中心</h3>
-        <p style="font-size: 12px; color: #666;">輸入名字並標記類型：</p>
+        <h3 style="margin:0 0 10px 0">🤫 隱藏控制中心</h3>
         <div class="input-row">
-            <input type="text" id="adminInput" placeholder="輸入名字">
+            <input type="text" id="adminInput" placeholder="輸入名單中的名字">
             <button class="add-btn" style="background:var(--red)" onclick="setAdmin('black')">黑</button>
             <button class="add-btn" style="background:var(--blue)" onclick="setAdmin('white')">白</button>
         </div>
-        <div class="list-area" id="adminList"></div>
-        <button class="main-roll-btn" style="margin-top:15px; padding:10px" onclick="closeModals()">關閉後台</button>
+        <div id="adminList" style="margin-top:10px; max-height:150px; overflow-y:auto"></div>
+        <button class="main-roll-btn" style="margin-top:15px; padding:10px" onclick="closeModals()">關閉</button>
     </div>
 
 <script>
     let db = {
-        food: { custom: JSON.parse(localStorage.getItem('f_custom')) || ["火鍋", "壽司"], history: [] },
-        play: { custom: JSON.parse(localStorage.getItem('p_custom')) || ["看電影", "爬山"], history: [] },
-        dice: { bill: JSON.parse(localStorage.getItem('party_names')) || ["張三", "李四", "王五"], random: ["1","2","3","4","5","6"] },
+        food: { custom: JSON.parse(localStorage.getItem('f_custom')) || ["火鍋", "壽司"], hot: ["漢堡", "拉麵", "牛排"], chinese: ["小籠包", "滷肉飯"], history: JSON.parse(localStorage.getItem('f_hist')) || [] },
+        play: { custom: JSON.parse(localStorage.getItem('p_custom')) || ["看電影", "爬山"], indoor: ["密室", "KTV"], outdoor: ["公園", "老街"], history: JSON.parse(localStorage.getItem('p_hist')) || [] },
+        dice: { bill: JSON.parse(localStorage.getItem('party_names')) || ["張三", "李四"], random: ["1","2","3","4","5","6"] },
         truth: { list: ["真心話1", "真心話2"] },
         dare: { list: ["大冒險1", "大冒險2"] }
     };
-
-    // 隱藏名單資料庫
     let adminDb = JSON.parse(localStorage.getItem('admin_db')) || { black: [], white: [] };
     let currentPage = '', currentTab = '', lastResult = '';
 
@@ -142,18 +140,31 @@
         document.getElementById('title').innerText = '決策小助手';
     }
 
+    function initTabs() {
+        const bar = document.getElementById('tabBar'); bar.innerHTML = '';
+        let tabs = [];
+        if (currentPage === 'food') tabs = [['custom','我的'],['hot','熱門'],['chinese','中式']];
+        else if (currentPage === 'play') tabs = [['custom','我的'],['indoor','室內'],['outdoor','戶外']];
+        else if (currentPage === 'dice') tabs = [['bill','誰買單'],['random','骰子']];
+        tabs.forEach(([k, l]) => {
+            const d = document.createElement('div');
+            d.className = `tab-item ${currentTab === k ? 'active' : ''}`;
+            d.innerText = l; d.onclick = (e) => { currentTab = k; initTabs(); resetResult(); renderHistory(); };
+            bar.appendChild(d);
+        });
+        document.getElementById('controlsArea').style.display = (tabs.length > 0) ? 'block' : 'none';
+        document.getElementById('toolInput').placeholder = (currentTab === 'bill') ? "輸入名字 (空格隔開)" : "自定義項目...";
+    }
+
     function handleInput() {
         const val = document.getElementById('toolInput').value.trim();
-        if(val === '#admin') { // 隱藏代碼觸發
-            document.getElementById('toolInput').value = '';
-            showAdmin(); return;
-        }
+        if(val === '#admin') { document.getElementById('toolInput').value = ''; showAdmin(); return; }
         if(!val) return;
         if (currentPage === 'dice' && currentTab === 'bill') {
             const names = val.split(/\s+/);
             db.dice.bill = [...new Set([...db.dice.bill, ...names])];
             localStorage.setItem('party_names', JSON.stringify(db.dice.bill));
-        } else {
+        } else if (db[currentPage].custom) {
             db[currentPage].custom.push(val);
             localStorage.setItem(currentPage.charAt(0)+'_custom', JSON.stringify(db[currentPage].custom));
         }
@@ -164,24 +175,18 @@
         let list = (currentPage === 'truth' || currentPage === 'dare') ? db[currentPage].list : db[currentPage][currentTab];
         if(!list || list.length === 0) return alert("名單為空");
 
-        // --- 黑白名單權重邏輯 ---
         let weightList = [];
         if (currentPage === 'dice' && currentTab === 'bill') {
             list.forEach(name => {
-                if (adminDb.white.includes(name)) return; // 白名單直接排除中獎
-                if (adminDb.black.includes(name)) {
-                    for(let k=0; k<10; k++) weightList.push(name); // 黑名單機率加10倍
-                } else {
-                    weightList.push(name);
-                }
+                if (adminDb.white.includes(name)) return;
+                if (adminDb.black.includes(name)) { for(let k=0; k<10; k++) weightList.push(name); }
+                else { weightList.push(name); }
             });
-            // 如果全部被白名單排除了，保底回歸原始名單
             if(weightList.length === 0) weightList = list;
-        } else {
-            weightList = list;
-        }
+        } else { weightList = list; }
 
         const resEl = document.getElementById('resultText');
+        document.getElementById('actionGrid').style.display = 'none';
         let i = 0;
         const timer = setInterval(() => {
             resEl.innerText = list[Math.floor(Math.random() * list.length)];
@@ -189,32 +194,46 @@
                 clearInterval(timer);
                 lastResult = weightList[Math.floor(Math.random() * weightList.length)];
                 resEl.innerText = (currentTab === 'bill' ? "💸 " : "✨ ") + lastResult;
-                document.getElementById('actionGrid').style.display = 'grid';
-                if (currentTab !== 'bill') addHistory(lastResult);
                 showSpecialButtons();
+                if (currentPage !== 'dice' || currentTab !== 'bill') addHistory(lastResult);
             }
         }, 60);
     }
 
-    // 隱藏後台邏輯
-    function showAdmin() {
-        document.getElementById('adminModal').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-        renderAdminList();
+    function showSpecialButtons() {
+        document.getElementById('actionGrid').style.display = 'grid';
+        document.querySelectorAll('.food-only').forEach(e => e.style.display = (currentPage==='food'?'block':'none'));
+        document.querySelectorAll('.play-only').forEach(e => e.style.display = (currentPage==='play'?'block':'none'));
+        if(currentPage === 'food') {
+            const q = encodeURIComponent(lastResult);
+            document.getElementById('linkM').href = `imeituan://www.meituan.com/s/s?w=${q}`;
+            document.getElementById('linkD').href = `dianping://search?keyword=${q}`;
+        }
     }
 
+    function openMap(type) {
+        const q = encodeURIComponent(lastResult);
+        let appUrl = '', webUrl = '';
+        switch(type) {
+            case 'google': appUrl = `comgooglemaps://?q=${q}`; webUrl = `https://www.google.com/maps/search/${q}`; break;
+            case 'apple': appUrl = `http://maps.apple.com/?q=${q}`; webUrl = `http://maps.apple.com/?q=${q}`; break;
+            case 'gaode': appUrl = `iosamap://search?sourceApplication=foodapp&keywords=${q}&style=2`; webUrl = `https://uri.amap.com/search?keyword=${q}`; break;
+            case 'baidu': appUrl = `baidumap://map/search?query=${q}&src=webapp.food.decision`; webUrl = `https://api.map.baidu.com/geocoder?address=${q}&output=html`; break;
+        }
+        const startTime = Date.now();
+        window.location.href = appUrl;
+        setTimeout(() => { if (Date.now() - startTime < 2500) window.location.href = webUrl; }, 2000);
+        closeModals();
+    }
+
+    function showAdmin() { document.getElementById('adminModal').style.display = 'block'; document.getElementById('overlay').style.display = 'block'; renderAdminList(); }
     function setAdmin(type) {
         const name = document.getElementById('adminInput').value.trim();
         if(!name) return;
-        // 先從另一邊移除，避免衝突
-        adminDb.black = adminDb.black.filter(n => n !== name);
-        adminDb.white = adminDb.white.filter(n => n !== name);
-        adminDb[type].push(name);
-        localStorage.setItem('admin_db', JSON.stringify(adminDb));
-        document.getElementById('adminInput').value = '';
-        renderAdminList();
+        adminDb.black = adminDb.black.filter(n => n !== name); adminDb.white = adminDb.white.filter(n => n !== name);
+        adminDb[type].push(name); localStorage.setItem('admin_db', JSON.stringify(adminDb));
+        document.getElementById('adminInput').value = ''; renderAdminList();
     }
-
     function renderAdminList() {
         const box = document.getElementById('adminList');
         let html = '';
@@ -222,33 +241,9 @@
         adminDb.white.forEach(n => html += `<span class="admin-tag" style="background:var(--blue)" onclick="removeAdmin('white','${n}')">${n} (白)</span>`);
         box.innerHTML = html;
     }
-
-    function removeAdmin(type, name) {
-        adminDb[type] = adminDb[type].filter(n => n !== name);
-        localStorage.setItem('admin_db', JSON.stringify(adminDb));
-        renderAdminList();
-    }
-
-    function closeModals() {
-        document.querySelectorAll('.map-modal, .admin-modal, .overlay').forEach(el => el.style.display = 'none');
-    }
-
-    // 其它輔助函數 (地圖、渲染等)
-    function initTabs() {
-        const bar = document.getElementById('tabBar'); bar.innerHTML = '';
-        let tabs = [];
-        if (currentPage === 'food') tabs = [['custom','我的'],['hot','熱門']];
-        else if (currentPage === 'play') tabs = [['custom','我的'],['indoor','室內']];
-        else if (currentPage === 'dice') tabs = [['bill','誰買單'],['random','骰子']];
-        tabs.forEach(([k, l]) => {
-            const d = document.createElement('div');
-            d.className = `tab-item ${currentTab === k ? 'active' : ''}`;
-            d.innerText = l; d.onclick = (e) => { currentTab = k; initTabs(); resetResult(); renderHistory(); };
-            bar.appendChild(d);
-        });
-        document.getElementById('controlsArea').style.display = (tabs.length > 0) ? 'block' : 'none';
-    }
-
+    function removeAdmin(type, name) { adminDb[type] = adminDb[type].filter(n => n !== name); localStorage.setItem('admin_db', JSON.stringify(adminDb)); renderAdminList(); }
+    function closeModals() { document.getElementById('mapModal').style.display = 'none'; document.getElementById('adminModal').style.display = 'none'; document.getElementById('overlay').style.display = 'none'; }
+    function showMapOptions() { document.getElementById('mapModal').style.display = 'block'; document.getElementById('overlay').style.display = 'block'; }
     function renderHistory() {
         const box = document.getElementById('historyTags');
         if (currentPage === 'dice' && currentTab === 'bill') {
@@ -259,17 +254,18 @@
             box.innerHTML = (db[currentPage].history || []).map(h => `<span class="tag">${h}</span>`).join('');
         }
     }
-
     function removeFromBill(n) { db.dice.bill = db.dice.bill.filter(x => x !== n); localStorage.setItem('party_names', JSON.stringify(db.dice.bill)); renderHistory(); }
-    function addHistory(item) { let h = db[currentPage].history || []; h.unshift(item); if(h.length > 5) h.pop(); db[currentPage].history = h; renderHistory(); }
-    function resetResult() { document.getElementById('resultText').innerText = '？'; document.getElementById('actionGrid').style.display = 'none'; }
-    function showSpecialButtons() {
-        document.querySelectorAll('.food-only').forEach(e => e.style.display = (currentPage==='food'?'block':'none'));
-        document.querySelectorAll('.play-only').forEach(e => e.style.display = (currentPage==='play'?'block':'none'));
+    function addHistory(item) {
+        let key = currentPage.charAt(0) + '_hist';
+        db[currentPage].history.unshift(item); if(db[currentPage].history.length > 6) db[currentPage].history.pop();
+        localStorage.setItem(key, JSON.stringify(db[currentPage].history)); renderHistory();
     }
-    function showMapOptions() { document.getElementById('mapModal').style.display = 'block'; document.getElementById('overlay').style.display = 'block'; }
-    function openMap(t) { /* 同前一版本地圖跳轉代碼 */ }
-    function shareCurrent() { /* 同前一版本分享代碼 */ }
+    function resetResult() { document.getElementById('resultText').innerText = '？'; document.getElementById('actionGrid').style.display = 'none'; }
+    function shareCurrent() {
+        let text = `建議：${lastResult}`;
+        if(currentTab === 'bill') text = `買單大冤種是：${lastResult}！`;
+        if(navigator.share) navigator.share({ title:'決策結果', text: text, url:window.location.href });
+    }
 </script>
 </body>
 </html>
