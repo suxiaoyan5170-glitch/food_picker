@@ -8,25 +8,112 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>決策助手 Pro</title>
     <style>
-        :root { --primary: #FF9500; /* 定義一個更高級的背景漸層 */--bg-gradient: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);--glass-bg: rgba(255, 255, 255, 0.7);}
-        body {background: var(--bg-gradient); background-attachment: fixed; min-height: 100vh; margin: 0; padding: env(safe-area-inset-top) 20px 20px;}
-        /* 讓主頁卡片變成毛玻璃質感 */
-        .menu-item {background: var(--glass-bg) !important;backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-                    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-                    border-radius: 28px !important;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;}
-        /* 優化 Emoji 圖標背景 */
-        .menu-item .icon { display: inline-flex; align-items: center;justify-content: center;width: 60px; height: 60px; background: rgba(255, 255, 255, 0.5);border-radius: 18px;margin-bottom: 15px;font-size: 35px !important;}
-        /* 決策結果容器 */
-        .result-container { background: var(--glass-bg) !important;backdrop-filter: blur(10px);border-radius: 30px !important;border: 2px dashed rgba(255, 149, 0, 0.5) !important;}
-        /* 頂部標題與按鈕優化 */
-        .header h2 { color: #444; font-weight: 700; letter-spacing: 1px;}
+        :root { 
+            --primary: #FF9500; 
+            --blue: #007AFF; 
+            --red: #FF3B30;
+            --glass: rgba(255, 255, 255, 0.75); /* 毛玻璃背景色 */
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            /* 優化後的柔和漸層背景 */
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); 
+            background-attachment: fixed;
+            margin: 0; 
+            padding: env(safe-area-inset-top) 15px 20px; 
+            box-sizing: border-box; 
+            color: #1c1c1e; 
+            -webkit-tap-highlight-color: transparent; 
+            min-height: 100vh;
+        }
+
+        .header { text-align: center; padding: 15px 0; position: sticky; top: 0; z-index: 100; }
+        .header h2 { font-weight: 800; color: #333; letter-spacing: 0.5px; margin: 0; }
+        
+        .back-btn { position: absolute; left: 0; top: 18px; display: none; background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); padding: 6px 14px; border-radius: 14px; font-weight: bold; cursor: pointer; }
+
+        .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        
+        /* 毛玻璃卡片樣式 */
+        .menu-item { 
+            background: var(--glass) !important; 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            border-radius: 28px !important; 
+            padding: 25px 15px; 
+            text-align: center; 
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07) !important; 
+            transition: 0.3s; 
+        }
+        .menu-item:active { transform: scale(0.96); background: rgba(255,255,255,0.85) !important; }
+        
+        .menu-item .icon { 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 18px;
+            margin-bottom: 12px;
+            font-size: 35px !important;
+        }
+        .menu-item .label { font-weight: bold; font-size: 16px; color: #333; }
+        .menu-item.hero { grid-column: span 2; flex-direction: row; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 30px; }
+
+        .controls { margin-bottom: 15px; }
+        .input-row { display: flex; gap: 8px; margin-bottom: 15px; }
+        input { flex: 1; border: 1px solid rgba(0,0,0,0.1); background: var(--glass); border-radius: 14px; padding: 12px 16px; font-size: 15px; outline: none; backdrop-filter: blur(5px); }
+        
+        .add-btn { background: var(--primary); color: white; border: none; padding: 0 18px; border-radius: 14px; font-weight: bold; }
+
+        .tab-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; }
+        .tab-item { white-space: nowrap; padding: 8px 18px; background: rgba(0,0,0,0.05); border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; }
+        .tab-item.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(255,149,0,0.3); }
+
+        /* 結果容器優化 */
+        .result-container { 
+            background: var(--glass) !important; 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px dashed rgba(255, 149, 0, 0.3) !important; 
+            border-radius: 30px !important; 
+            padding: 40px 15px; 
+            text-align: center; 
+            margin: 20px 0; 
+            min-height: 80px; 
+        }
+        .result-text { font-size: 40px; font-weight: 900; color: #FF4500; text-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        
+        .main-roll-btn { 
+            background: #1c1c1e; color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; 
+            font-size: 19px; font-weight: bold; box-shadow: 0 10px 25px rgba(0,0,0,0.15); cursor: pointer; 
+        }
+
+        .action-grid { display: none; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+        .option-btn { padding: 14px; border-radius: 15px; text-decoration: none; color: white; font-size: 14px; text-align: center; font-weight: bold; border:none; cursor: pointer; }
+
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 999; backdrop-filter: blur(4px); }
+        .map-modal, .admin-modal { 
+            display: none; position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: rgba(255,255,255,0.9); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-radius: 28px 28px 0 0; padding: 25px 20px; box-sizing: border-box; z-index: 1000; 
+        }
+        .admin-modal { bottom: auto; top: 50%; transform: translate(0, -50%); width: 90%; left: 5%; border-radius: 28px; }
+        .map-option { padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.05); text-align: center; font-size: 18px; color: var(--blue); font-weight: 600; }
+
+        .tag { background: rgba(255,255,255,0.6); padding: 7px 14px; border-radius: 12px; font-size: 13px; font-weight: 500; border: 1px solid rgba(255,255,255,0.4); }
+        .page { display: none; }
+        .active-page { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <button id="backBtn" class="back-btn" onclick="goHome()">← 返回</button>
+        <button id="backBtn" class="back-btn" onclick="goHome()">←</button>
         <h2 id="title">決策小助手</h2>
     </div>
 
@@ -63,18 +150,18 @@
         <div id="actionGrid" class="action-grid">
             <a id="linkM" class="option-btn food-only" style="background:#FFD000;color:#333">美團</a>
             <a id="linkD" class="option-btn food-only" style="background:#FF6633">點評</a>
-            <button class="option-btn play-only" style="background:#007AFF; grid-column: span 2;" onclick="showMapOptions()">打開地圖導航</button>
+            <button class="option-btn play-only" style="background:var(--blue); grid-column: span 2;" onclick="showMapOptions()">地圖導航</button>
             <button class="option-btn" id="shareBtn" style="background:#5856D6; grid-column: span 2;" onclick="shareCurrent()">分享結果</button>
         </div>
-        <div class="history-box">
-            <div id="historyTitle" style="font-weight: bold; color: #8E8E93;">最近抽中</div>
-            <div class="history-tags" id="historyTags"></div>
+        <div class="history-box" style="margin-top:30px">
+            <div id="historyTitle" style="font-weight: bold; color: #666; font-size: 14px; margin-bottom: 10px;">最近抽中</div>
+            <div class="history-tags" id="historyTags" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
         </div>
     </div>
 
     <div class="overlay" id="overlay" onclick="closeModals()"></div>
     <div class="map-modal" id="mapModal">
-        <div style="font-weight: bold; margin-bottom: 15px; color:#666; text-align: center;">選擇地圖應用</div>
+        <div style="font-weight: bold; margin-bottom: 15px; color:#666; text-align: center;">選擇導航</div>
         <div class="map-option" onclick="openMap('google')">Google Maps</div>
         <div class="map-option" onclick="openMap('apple')">Apple Maps</div>
         <div class="map-option" onclick="openMap('gaode')">高德地圖</div>
@@ -83,14 +170,14 @@
     </div>
 
     <div class="admin-modal" id="adminModal">
-        <h3 style="margin:0 0 10px 0">🤫 隱藏控制中心</h3>
+        <h3 style="margin:0 0 15px 0; text-align: center;">🤫 隱藏控制中心</h3>
         <div class="input-row">
-            <input type="text" id="adminInput" placeholder="輸入名單中的名字">
+            <input type="text" id="adminInput" placeholder="輸入名字">
             <button class="add-btn" style="background:var(--red)" onclick="setAdmin('black')">黑</button>
             <button class="add-btn" style="background:var(--blue)" onclick="setAdmin('white')">白</button>
         </div>
-        <div id="adminList" style="margin-top:10px; max-height:150px; overflow-y:auto"></div>
-        <button class="main-roll-btn" style="margin-top:15px; padding:10px" onclick="closeModals()">關閉</button>
+        <div id="adminList" style="margin-top:15px; max-height:150px; overflow-y:auto; display:flex; flex-wrap:wrap; gap:5px;"></div>
+        <button class="main-roll-btn" style="margin-top:20px; padding:12px; font-size:16px" onclick="closeModals()">完成設置</button>
     </div>
 
 <script>
@@ -98,8 +185,8 @@
         food: { custom: JSON.parse(localStorage.getItem('f_custom')) || ["火鍋", "壽司"], hot: ["漢堡", "拉麵", "牛排"], chinese: ["小籠包", "滷肉飯"], history: JSON.parse(localStorage.getItem('f_hist')) || [] },
         play: { custom: JSON.parse(localStorage.getItem('p_custom')) || ["看電影", "爬山"], indoor: ["密室", "KTV"], outdoor: ["公園", "老街"], history: JSON.parse(localStorage.getItem('p_hist')) || [] },
         dice: { bill: JSON.parse(localStorage.getItem('party_names')) || ["張三", "李四"], random: ["1","2","3","4","5","6"] },
-        truth: { list: ["真心話1", "真心話2"] },
-        dare: { list: ["大冒險1", "大冒險2"] }
+        truth: { list: ["手機最後一張照片", "最尷尬的回憶", "心跳最快的一次"] },
+        dare: { list: ["學貓叫", "給第三人發訊息", "大聲唱歌"] }
     };
     let adminDb = JSON.parse(localStorage.getItem('admin_db')) || { black: [], white: [] };
     let currentPage = '', currentTab = '', lastResult = '';
@@ -129,11 +216,10 @@
         tabs.forEach(([k, l]) => {
             const d = document.createElement('div');
             d.className = `tab-item ${currentTab === k ? 'active' : ''}`;
-            d.innerText = l; d.onclick = (e) => { currentTab = k; initTabs(); resetResult(); renderHistory(); };
+            d.innerText = l; d.onclick = () => { currentTab = k; initTabs(); resetResult(); renderHistory(); };
             bar.appendChild(d);
         });
         document.getElementById('controlsArea').style.display = (tabs.length > 0) ? 'block' : 'none';
-        document.getElementById('toolInput').placeholder = (currentTab === 'bill') ? "輸入名字 (空格隔開)" : "自定義項目...";
     }
 
     function handleInput() {
@@ -141,8 +227,7 @@
         if(val === '#admin') { document.getElementById('toolInput').value = ''; showAdmin(); return; }
         if(!val) return;
         if (currentPage === 'dice' && currentTab === 'bill') {
-            const names = val.split(/\s+/);
-            db.dice.bill = [...new Set([...db.dice.bill, ...names])];
+            val.split(/\s+/).forEach(n => { if(!db.dice.bill.includes(n)) db.dice.bill.push(n); });
             localStorage.setItem('party_names', JSON.stringify(db.dice.bill));
         } else if (db[currentPage].custom) {
             db[currentPage].custom.push(val);
@@ -154,19 +239,16 @@
     function runRoll() {
         let list = (currentPage === 'truth' || currentPage === 'dare') ? db[currentPage].list : db[currentPage][currentTab];
         if(!list || list.length === 0) return alert("名單為空");
-
         let weightList = [];
         if (currentPage === 'dice' && currentTab === 'bill') {
             list.forEach(name => {
                 if (adminDb.white.includes(name)) return;
-                if (adminDb.black.includes(name)) { for(let k=0; k<10; k++) weightList.push(name); }
+                if (adminDb.black.includes(name)) { for(let k=0; k<12; k++) weightList.push(name); }
                 else { weightList.push(name); }
             });
             if(weightList.length === 0) weightList = list;
         } else { weightList = list; }
-
         const resEl = document.getElementById('resultText');
-        document.getElementById('actionGrid').style.display = 'none';
         let i = 0;
         const timer = setInterval(() => {
             resEl.innerText = list[Math.floor(Math.random() * list.length)];
@@ -200,35 +282,33 @@
             case 'gaode': appUrl = `iosamap://search?sourceApplication=foodapp&keywords=${q}&style=2`; webUrl = `https://uri.amap.com/search?keyword=${q}`; break;
             case 'baidu': appUrl = `baidumap://map/search?query=${q}&src=webapp.food.decision`; webUrl = `https://api.map.baidu.com/geocoder?address=${q}&output=html`; break;
         }
-        const startTime = Date.now();
+        const start = Date.now();
         window.location.href = appUrl;
-        setTimeout(() => { if (Date.now() - startTime < 2500) window.location.href = webUrl; }, 2000);
+        setTimeout(() => { if (Date.now() - start < 2500) window.location.href = webUrl; }, 2000);
         closeModals();
     }
 
     function showAdmin() { document.getElementById('adminModal').style.display = 'block'; document.getElementById('overlay').style.display = 'block'; renderAdminList(); }
     function setAdmin(type) {
-        const name = document.getElementById('adminInput').value.trim();
-        if(!name) return;
-        adminDb.black = adminDb.black.filter(n => n !== name); adminDb.white = adminDb.white.filter(n => n !== name);
-        adminDb[type].push(name); localStorage.setItem('admin_db', JSON.stringify(adminDb));
+        const n = document.getElementById('adminInput').value.trim();
+        if(!n) return;
+        adminDb.black = adminDb.black.filter(x => x !== n); adminDb.white = adminDb.white.filter(x => x !== n);
+        adminDb[type].push(n); localStorage.setItem('admin_db', JSON.stringify(adminDb));
         document.getElementById('adminInput').value = ''; renderAdminList();
     }
     function renderAdminList() {
-        const box = document.getElementById('adminList');
-        let html = '';
-        adminDb.black.forEach(n => html += `<span class="admin-tag" style="background:var(--red)" onclick="removeAdmin('black','${n}')">${n} (黑)</span>`);
-        adminDb.white.forEach(n => html += `<span class="admin-tag" style="background:var(--blue)" onclick="removeAdmin('white','${n}')">${n} (白)</span>`);
-        box.innerHTML = html;
+        document.getElementById('adminList').innerHTML = 
+            adminDb.black.map(n => `<span class="tag" style="background:#FFE5E5;color:var(--red)" onclick="removeAdmin('black','${n}')">${n} 黑</span>`).join('') +
+            adminDb.white.map(n => `<span class="tag" style="background:#E5F0FF;color:var(--blue)" onclick="removeAdmin('white','${n}')">${n} 白</span>`).join('');
     }
-    function removeAdmin(type, name) { adminDb[type] = adminDb[type].filter(n => n !== name); localStorage.setItem('admin_db', JSON.stringify(adminDb)); renderAdminList(); }
-    function closeModals() { document.getElementById('mapModal').style.display = 'none'; document.getElementById('adminModal').style.display = 'none'; document.getElementById('overlay').style.display = 'none'; }
+    function removeAdmin(t, n) { adminDb[t] = adminDb[t].filter(x => x !== n); localStorage.setItem('admin_db', JSON.stringify(adminDb)); renderAdminList(); }
+    function closeModals() { document.querySelectorAll('.map-modal, .admin-modal, .overlay').forEach(el => el.style.display = 'none'); }
     function showMapOptions() { document.getElementById('mapModal').style.display = 'block'; document.getElementById('overlay').style.display = 'block'; }
     function renderHistory() {
         const box = document.getElementById('historyTags');
         if (currentPage === 'dice' && currentTab === 'bill') {
             document.getElementById('historyTitle').innerText = "參與名單 (點擊刪除)";
-            box.innerHTML = db.dice.bill.map(n => `<span class="tag remove" onclick="removeFromBill('${n}')">${n}</span>`).join('');
+            box.innerHTML = db.dice.bill.map(n => `<span class="tag" style="padding-right:25px;position:relative" onclick="removeFromBill('${n}')">${n}<b style="position:absolute;right:8px;opacity:0.3">×</b></span>`).join('');
         } else {
             document.getElementById('historyTitle').innerText = "最近抽中";
             box.innerHTML = (db[currentPage].history || []).map(h => `<span class="tag">${h}</span>`).join('');
@@ -236,15 +316,13 @@
     }
     function removeFromBill(n) { db.dice.bill = db.dice.bill.filter(x => x !== n); localStorage.setItem('party_names', JSON.stringify(db.dice.bill)); renderHistory(); }
     function addHistory(item) {
-        let key = currentPage.charAt(0) + '_hist';
         db[currentPage].history.unshift(item); if(db[currentPage].history.length > 6) db[currentPage].history.pop();
-        localStorage.setItem(key, JSON.stringify(db[currentPage].history)); renderHistory();
+        localStorage.setItem(currentPage.charAt(0) + '_hist', JSON.stringify(db[currentPage].history)); renderHistory();
     }
     function resetResult() { document.getElementById('resultText').innerText = '？'; document.getElementById('actionGrid').style.display = 'none'; }
     function shareCurrent() {
-        let text = `建議：${lastResult}`;
-        if(currentTab === 'bill') text = `買單大冤種是：${lastResult}！`;
-        if(navigator.share) navigator.share({ title:'決策結果', text: text, url:window.location.href });
+        let t = (currentTab === 'bill') ? `買單大冤種是：${lastResult}！` : `建議結果：${lastResult}`;
+        if(navigator.share) navigator.share({ title:'決策結果', text: t, url:window.location.href });
     }
 </script>
 </body>
