@@ -6,171 +6,241 @@
     <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAMAAAC8Y9NQAAAAflBMVEUAAAD///+ZzP8Anf8Aov8Amv8AlP8Aqv8Aru8Anv8Amf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8+S878AAAALHRSTlMAAgMEBQYICQoLDA0ODxITFBUWFxgZGhscHR4fICEiIyQlJicoKSorLC0uLzAyYm98AAADfklEQVR42u2b2ZKiMBSG6Y6ICwiCuyK7oiIu77/S6YI6pS0SuAnTOf9vXpIsS/6T9CStVAsLCwsLCwsLCwsLC5vIdI59f6E9yGofBclKjO8T36Y9x5ovp3W9v6D9L1Hk++Fm62v7X+K680U2qfX+gnSAnX6W6v0FCXp/QTrA82T6pPr67/8LkuM8nU6fA+MvSJDmP9Ppc+A9Vf8XJMn0fDqdPmP9X5CcTOfp9Bmz/oKkkOnV6TNR/xc0S86m06fA7P8LmmM6nz4DZv9f0DyfptOnwGf8Bcm5m6fT58Bl/AXJWZpOnwPn8RckZ0un0+fAefwFyVkt06fA97v6779z/3f0v/P0Of9vSJK5/f7D3P4/p86Xf9m+f9L5/knnf9L5/knnf9L5/knnf9L5/knnf9L5/knnf9L5/knnf/L5fX069/90Wf/H38B1X7R+B8XnE4vPZ7Otz2Zdn82mPptVfTar+mxW9dlmS6U5WyrN2VJpzpZK602ltN5USutNpbTeVErrTaW03lRar7XGfK015mutMV9rjflaY77WGPu7mGv7u5hr+7uYa/u7mGv7u5hr+7uY6zNrrM+ssT6zxvrMGuszS6y9Zom11yyx9poly6+9Zvn/sSXL/48tWf5/bMny/2NLlv8fW7L879iS5X/Hlv0Y2Y+R/RjZj5H9GNmPkf0Y2Y+R/RjZj/FfjP9i/Bfjv8i6XWSV3v9R/m399/Xf139f/3399/Xf139f/3399/Xf13/fvK79fS6V6eey6ee0qWfLpp4Nm3oWbOoZsqknxaaeCJt6Amzqy7Sps6LOijoruqyosqLOiior6qyosqLOitqzYvf82D07ds+O3bNj9+zYPTt2z47ds2P37Ni99V67t9xr95Z77d5yr91b7rV7y712b7nX7i332r1NfS99p/0X+S/yX+S/yH+R/yL/Rf6L/Bf5L/Jf5L/Y0mRLky1NtjTZ0mRLky1NtjTZ0mRLky1NtjTZ0mRLky1NtjSZY5o5ZkYzw8xoZpAZTQwyw8hgMwwMNoPAYDMIDDZZZZNFFllkkUUWWWSRRRZZZJFFFllkkUUWWWSRRRY9iR5Ej6EH0UPoMfQQegy9jV5G76KX0avoXfQqeveS99DL6DX0MnoVvYreRS+iV9Gr6F30InoRvYhe/Vf9Ay7R9U9L6v9/AAAA//8DAIDU9P++nO5VAAAAAElFTkSuQmCC">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>決策小助手</title>
+    <title>決策助手 Pro</title>
     <style>
-        :root { --bg: #FFF5E6; --card-bg: #FFFFFF; --text: #333; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: env(safe-area-inset-top) 20px 20px; box-sizing: border-box; }
-        .header { text-align: center; padding: 20px 0; position: relative; }
-        .back-btn { position: absolute; left: 0; top: 25px; display: none; background: #EEE; border: none; padding: 5px 12px; border-radius: 10px; font-weight: bold; }
+        :root { --primary: #FF9500; --bg: #F8F9FA; --card: #FFFFFF; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: env(safe-area-inset-top) 15px 20px; box-sizing: border-box; color: #333; }
         
-        /* 首頁九宮格風格 */
-        .main-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
-        .menu-card { background: var(--card-bg); border-radius: 20px; padding: 25px 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.2s; cursor: pointer; }
-        .menu-card:active { transform: scale(0.95); }
-        .menu-card .icon { font-size: 40px; margin-bottom: 10px; }
-        .menu-card .title { font-weight: bold; font-size: 16px; }
-        .menu-card.big { grid-column: span 2; display: flex; align-items: center; justify-content: center; gap: 20px; }
+        /* 標題與導航 */
+        .header { text-align: center; padding: 15px 0; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+        .back-btn { position: absolute; left: 0; top: 18px; display: none; background: #EEE; border: none; padding: 6px 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
-        /* 功能分頁 */
-        .page { display: none; animation: fadeIn 0.3s; }
+        /* 九宮格主選單 */
+        .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .menu-item { background: var(--card); border-radius: 24px; padding: 30px 15px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.04); transition: 0.2s; border: 1px solid rgba(0,0,0,0.02); }
+        .menu-item:active { transform: scale(0.95); background: #F2F2F7; }
+        .menu-item .icon { font-size: 45px; margin-bottom: 12px; display: block; }
+        .menu-item .label { font-weight: bold; font-size: 16px; color: #1C1C1E; }
+        .menu-item.hero { grid-column: span 2; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 35px; background: linear-gradient(135deg, #ffffff 0%, #fff5e6 100%); }
+
+        /* 吃貨分頁專屬樣式 */
+        .food-controls { margin-bottom: 15px; }
+        .input-row { display: flex; gap: 8px; margin-bottom: 15px; }
+        input { flex: 1; border: 1.5px solid #D1D1D6; border-radius: 12px; padding: 12px; font-size: 15px; outline: none; }
+        .add-btn { background: var(--primary); color: white; border: none; padding: 0 15px; border-radius: 12px; font-weight: bold; }
+        
+        .tab-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; -webkit-overflow-scrolling: touch; }
+        .tab-item { white-space: nowrap; padding: 8px 16px; background: #E5E5EA; border-radius: 20px; font-size: 13px; cursor: pointer; color: #3A3A3C; }
+        .tab-item.active { background: var(--primary); color: white; font-weight: bold; }
+
+        /* 結果顯示 */
+        .result-container { background: #FFF; border: 2.5px dashed var(--primary); border-radius: 28px; padding: 40px 15px; text-align: center; margin: 15px 0; min-height: 80px; display: flex; flex-direction: column; justify-content: center; }
+        .result-text { font-size: 38px; font-weight: 800; color: #FF4500; }
+        
+        /* 操作按鈕 */
+        .main-roll-btn { background: #1C1C1E; color: white; border: none; width: 100%; padding: 20px; border-radius: 18px; font-size: 20px; font-weight: bold; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .search-options { display: none; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; animation: fadeInUp 0.4s; }
+        .option-btn { padding: 14px; border-radius: 12px; text-decoration: none; color: white; font-size: 14px; text-align: center; font-weight: bold; }
+
+        /* 歷史足跡 */
+        .history-box { margin-top: 25px; text-align: left; }
+        .history-title { font-size: 15px; font-weight: bold; color: #8E8E93; margin-bottom: 10px; }
+        .history-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag { background: #E5E5EA; padding: 6px 12px; border-radius: 10px; font-size: 13px; color: #333; }
+
+        .page { display: none; }
         .active-page { display: block; }
-
-        /* 共用功能樣式 */
-        .result-box { background: #FFF; border: 3px dashed #FF9500; border-radius: 25px; padding: 40px 10px; margin: 20px 0; text-align: center; font-size: 32px; font-weight: bold; color: #FF4500; }
-        .action-btn { background: #1C1C1E; color: white; border: none; width: 100%; padding: 18px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; }
-        .search-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-        .search-btn { padding: 12px; border-radius: 10px; text-decoration: none; color: white; font-size: 14px; text-align: center; font-weight: bold; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <button id="backBtn" class="back-btn" onclick="showHome()">← 返回</button>
-        <h2 id="pageTitle">決策小助手</h2>
+        <button id="backBtn" class="back-btn" onclick="goHome()">← 返回</button>
+        <h2 id="title">決策小助手</h2>
     </div>
 
     <div id="homePage" class="page active-page">
-        <div class="main-menu">
-            <div class="menu-card big" onclick="openPage('food', '🍴 吃什麼')">
-                <div class="icon">🍱</div>
-                <div class="title">吃貨神器</div>
+        <div class="home-grid">
+            <div class="menu-item hero" onclick="goTo('food', '🍱 吃貨神器')">
+                <span class="icon">🍱</span>
+                <span class="label">今天吃什麼？</span>
             </div>
-            <div class="menu-card" onclick="openPage('play', '🚗 去哪玩')">
-                <div class="icon">🎡</div>
-                <div class="title">去哪玩兒</div>
+            <div class="menu-item" onclick="goTo('play', '🎡 去哪玩兒')">
+                <span class="icon">🎡</span>
+                <span class="label">去哪玩兒</span>
             </div>
-            <div class="menu-card" onclick="openPage('dice', '🎲 擲骰子')">
-                <div class="icon">🎲</div>
-                <div class="title">隨機擲骰</div>
+            <div class="menu-item" onclick="goTo('dice', '🎲 隨機擲骰')">
+                <span class="icon">🎲</span>
+                <span class="label">隨機擲骰</span>
             </div>
-            <div class="menu-card" onclick="openPage('truth', '🤫 真心話')">
-                <div class="icon">💬</div>
-                <div class="title">真心話</div>
+            <div class="menu-item" onclick="goTo('truth', '🤫 真心話')">
+                <span class="icon">💬</span>
+                <span class="label">真心話</span>
             </div>
-            <div class="menu-card" onclick="openPage('dare', '🔥 大冒險')">
-                <div class="icon">🎭</div>
-                <div class="title">大冒險</div>
+            <div class="menu-item" onclick="goTo('dare', '🔥 大冒險')">
+                <span class="icon">🎭</span>
+                <span class="label">大冒險</span>
             </div>
         </div>
     </div>
 
     <div id="foodPage" class="page">
-        <div class="result-box" id="foodResult">？</div>
-        <button class="action-btn" onclick="roll('food')">開始抽取</button>
-        <div id="foodSearch" class="search-grid" style="display:none">
-            <a id="mSearch" class="search-btn" style="background:#FFD000;color:#333">美團</a>
-            <a id="dSearch" class="search-btn" style="background:#FF6633">點評</a>
-            <a id="gSearch" class="search-btn" style="background:#34A853">Google</a>
-            <button class="search-btn" style="background:#5856D6" onclick="share('food')">分享</button>
+        <div class="food-controls">
+            <div class="input-row">
+                <input type="text" id="foodInput" placeholder="輸入私藏美食...">
+                <button class="add-btn" onclick="saveCustomFood()">新增</button>
+            </div>
+            <div class="tab-bar" id="foodTabs">
+                <div class="tab-item active" onclick="switchFoodTab('custom', this)">我的清單</div>
+                <div class="tab-item" onclick="switchFoodTab('hot', this)">熱門推薦</div>
+                <div class="tab-item" onclick="switchFoodTab('chinese', this)">中式料理</div>
+            </div>
+        </div>
+
+        <div class="result-container">
+            <div id="foodResult" class="result-text">？</div>
+        </div>
+        
+        <button class="main-roll-btn" onclick="runFoodRoll()">開始隨機抽取</button>
+
+        <div id="foodActions" class="search-options">
+            <a id="linkM" class="option-btn" style="background:#FFD000;color:#333">美團搜尋</a>
+            <a id="linkD" class="option-btn" style="background:#FF6633">大眾點評</a>
+            <a id="linkG" class="option-btn" style="background:#34A853">Google</a>
+            <button class="option-btn" style="background:#5856D6" onclick="shareCurrent()">分享結果</button>
+        </div>
+
+        <div class="history-box">
+            <div class="history-title">最近抽中</div>
+            <div class="history-tags" id="foodHistory"></div>
         </div>
     </div>
 
-    <div id="playPage" class="page">
-        <div class="result-box" id="playResult">？</div>
-        <button class="action-btn" onclick="roll('play')">看看去哪兒</button>
-        <div id="playSearch" class="search-grid" style="display:none">
-            <a id="pMap" class="search-btn" style="background:#007AFF; grid-column: span 2;">在地圖中查看位置</a>
+    <div id="commonPage" class="page">
+        <div class="result-container">
+            <div id="commonResult" class="result-text">？</div>
         </div>
-    </div>
-
-    <div id="simplePage" class="page">
-        <div class="result-box" id="simpleResult">？</div>
-        <button id="simpleBtn" class="action-btn">點擊開始</button>
+        <button id="commonBtn" class="main-roll-btn">點擊開始</button>
     </div>
 
 <script>
-    const data = {
-        food: ["麻辣火鍋", "日式拉麵", "炸雞漢堡", "牛肉麵", "酸菜魚", "迴轉壽司"],
-        play: ["看電影", "逛百貨公司", "唱KTV", "去爬山", "河邊散步", "去遊樂園", "密室逃脫"],
-        dice: ["1", "2", "3", "4", "5", "6"],
-        truth: ["手機裡最後一張照片是啥", "最糗的一件事", "初吻在幾歲", "現場挑一個異性對視"],
-        dare: ["模仿猩猩叫", "給通訊錄第三人打電話", "對外大喊我是笨蛋", "做10個伏地挺身"]
+    // 資料結構
+    let customFoods = JSON.parse(localStorage.getItem('myFoods')) || ["火鍋", "壽司", "炸雞"];
+    let foodHistory = JSON.parse(localStorage.getItem('foodHist')) || [];
+    
+    const foodDB = {
+        custom: customFoods,
+        hot: ["漢堡", "拉麵", "牛排", "義大利麵", "水餃"],
+        chinese: ["酸菜魚", "小籠包", "麻辣燙", "滷肉飯", "烤鴨"]
     };
 
-    let currentChoice = "";
+    const otherDB = {
+        play: ["看電影", "逛公園", "唱KTV", "密室逃脫", "爬山", "去遊樂園"],
+        dice: ["1", "2", "3", "4", "5", "6"],
+        truth: ["手機最後一張照片", "最尷尬的回憶", "心跳最快的一次", "現場對視10秒"],
+        dare: ["模仿猩猩叫", "給第三人發我愛你", "大喊我是豬", "做5個深蹲"]
+    };
 
-    function openPage(pageId, title) {
+    let currentFoodTab = 'custom';
+    let lastResult = "";
+
+    // 頁面導航
+    function goTo(id, title) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
         document.getElementById('backBtn').style.display = 'block';
-        document.getElementById('pageTitle').innerText = title;
-
-        if(pageId === 'food') {
+        document.getElementById('title').innerText = title;
+        
+        if(id === 'food') {
             document.getElementById('foodPage').classList.add('active-page');
-        } else if(pageId === 'play') {
-            document.getElementById('playPage').classList.add('active-page');
+            renderHistory();
         } else {
-            document.getElementById('simplePage').classList.add('active-page');
-            document.getElementById('simpleBtn').onclick = () => rollSimple(pageId);
+            document.getElementById('commonPage').classList.add('active-page');
+            document.getElementById('commonBtn').onclick = () => runCommonRoll(id);
         }
     }
 
-    function showHome() {
+    function goHome() {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
         document.getElementById('homePage').classList.add('active-page');
         document.getElementById('backBtn').style.display = 'none';
-        document.getElementById('pageTitle').innerText = '決策小助手';
+        document.getElementById('title').innerText = '決策小助手';
     }
 
-    function roll(type) {
-        const list = data[type];
-        const resEl = document.getElementById(type + 'Result');
-        const searchEl = document.getElementById(type + 'Search');
-        searchEl.style.display = 'none';
+    // 吃貨功能邏輯
+    function switchFoodTab(tab, el) {
+        currentFoodTab = tab;
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('foodResult').innerText = '？';
+        document.getElementById('foodActions').style.display = 'none';
+    }
 
-        let count = 0;
+    function saveCustomFood() {
+        const val = document.getElementById('foodInput').value.trim();
+        if(val) {
+            customFoods.push(val);
+            localStorage.setItem('myFoods', JSON.stringify(customFoods));
+            document.getElementById('foodInput').value = "";
+            alert("已新增到我的清單！");
+        }
+    }
+
+    function runFoodRoll() {
+        const list = foodDB[currentFoodTab];
+        const resEl = document.getElementById('foodResult');
+        const actionEl = document.getElementById('foodActions');
+        actionEl.style.display = 'none';
+
+        let i = 0;
         const timer = setInterval(() => {
             resEl.innerText = list[Math.floor(Math.random() * list.length)];
-            if(count++ > 12) {
+            if(i++ > 15) {
                 clearInterval(timer);
-                currentChoice = list[Math.floor(Math.random() * list.length)];
-                resEl.innerText = "✨ " + currentChoice;
-                searchEl.style.display = 'grid';
-                if(type === 'food') updateFoodLinks();
-                if(type === 'play') updatePlayLinks();
+                lastResult = list[Math.floor(Math.random() * list.length)];
+                resEl.innerText = "✨ " + lastResult;
+                actionEl.style.display = 'grid';
+                updateFoodLinks();
+                addHistory(lastResult);
             }
         }, 60);
     }
 
-    function rollSimple(type) {
-        const list = data[type];
-        const resEl = document.getElementById('simpleResult');
-        let count = 0;
+    function updateFoodLinks() {
+        const q = encodeURIComponent(lastResult);
+        document.getElementById('linkM').href = `imeituan://www.meituan.com/s/s?w=${q}`;
+        document.getElementById('linkD').href = `dianping://search?keyword=${q}`;
+        document.getElementById('linkG').href = `https://www.google.com/maps/search/${q}`;
+    }
+
+    function addHistory(item) {
+        foodHistory.unshift(item);
+        if(foodHistory.length > 6) foodHistory.pop();
+        localStorage.setItem('foodHist', JSON.stringify(foodHistory));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const box = document.getElementById('foodHistory');
+        box.innerHTML = foodHistory.map(h => `<span class="tag">${h}</span>`).join('');
+    }
+
+    // 通用滾動
+    function runCommonRoll(id) {
+        const list = otherDB[id];
+        const resEl = document.getElementById('commonResult');
+        let i = 0;
         const timer = setInterval(() => {
             resEl.innerText = list[Math.floor(Math.random() * list.length)];
-            if(count++ > 10) {
+            if(i++ > 12) {
                 clearInterval(timer);
                 resEl.innerText = "✨ " + list[Math.floor(Math.random() * list.length)];
             }
         }, 60);
     }
 
-    function updateFoodLinks() {
-        const encoded = encodeURIComponent(currentChoice);
-        document.getElementById('mSearch').href = `imeituan://www.meituan.com/s/s?w=${encoded}`;
-        document.getElementById('dSearch').href = `dianping://search?keyword=${encoded}`;
-        document.getElementById('gSearch').href = `http://maps.google.com/?q=${encoded}`;
-    }
-
-    function updatePlayLinks() {
-        document.getElementById('pMap').href = `http://maps.google.com/?q=${encodeURIComponent(currentChoice)}`;
-    }
-
-    function share(type) {
-        if (navigator.share) {
-            navigator.share({ title: '決策結果', text: `我的決策小助手建議：${currentChoice}`, url: window.location.href });
-        }
+    function shareCurrent() {
+        if(navigator.share) navigator.share({ title:'今天吃什麼', text:`決定吃：${lastResult}！`, url:window.location.href });
     }
 </script>
 </body>
