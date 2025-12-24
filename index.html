@@ -8,39 +8,19 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>決策助手 Pro</title>
     <style>
-        :root { --primary: #FF9500; --bg: #F8F9FA; --card: #FFFFFF; --blue: #007AFF; --red: #FF3B30; }
-        body { font-family: -apple-system, sans-serif; background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); margin: 0; padding: env(safe-area-inset-top) 15px 20px; box-sizing: border-box; color: #333; -webkit-tap-highlight-color: transparent; }
-        .header { text-align: center; padding: 15px 0; position: sticky; top: 0; background: var(--bg); z-index: 100; }
-        .back-btn { position: absolute; left: 0; top: 18px; display: none; background: #EEE; border: none; padding: 6px 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-        .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
-        .menu-item { background: var(--card); border-radius: 24px; padding: 30px 15px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.04); transition: 0.2s; border: 1px solid rgba(0,0,0,0.02); }
-        .menu-item:active { transform: scale(0.95); }
-        .menu-item .icon { font-size: 45px; margin-bottom: 12px; display: block; }
-        .menu-item .label { font-weight: bold; font-size: 16px; }
-        .menu-item.hero { grid-column: span 2; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 35px; background: linear-gradient(135deg, #ffffff 0%, #fff5e6 100%); }
-        .controls { margin-bottom: 15px; }
-        .input-row { display: flex; gap: 8px; margin-bottom: 15px; }
-        input { flex: 1; border: 1.5px solid #D1D1D6; border-radius: 12px; padding: 12px; font-size: 15px; outline: none; }
-        .add-btn { background: var(--primary); color: white; border: none; padding: 0 15px; border-radius: 12px; font-weight: bold; }
-        .tab-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; }
-        .tab-item { white-space: nowrap; padding: 8px 16px; background: #E5E5EA; border-radius: 20px; font-size: 13px; cursor: pointer; }
-        .tab-item.active { background: var(--primary); color: white; font-weight: bold; }
-        .result-container { background: #FFF; border: 2.5px dashed var(--primary); border-radius: 28px; padding: 40px 15px; text-align: center; margin: 15px 0; min-height: 80px; }
-        .result-text { font-size: 38px; font-weight: 800; color: #FF4500; }
-        .main-roll-btn { background: #1C1C1E; color: white; border: none; width: 100%; padding: 20px; border-radius: 18px; font-size: 20px; font-weight: bold; box-shadow: 0 10px 25px rgba(0,0,0,0.1); cursor: pointer; }
-        .action-grid { display: none; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-        .option-btn { padding: 14px; border-radius: 12px; color: white; font-size: 14px; text-align: center; font-weight: bold; border:none; text-decoration: none; cursor: pointer; }
-        .history-box { margin-top: 25px; text-align: left; }
-        .history-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-        .tag { background: #E5E5EA; padding: 6px 12px; border-radius: 10px; font-size: 13px; }
-        .tag.remove::after { content: '×'; margin-left: 5px; color: #999; }
-        .page { display: none; }
-        .active-page { display: block; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 999; }
-        .map-modal { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-radius: 24px 24px 0 0; padding: 20px; box-sizing: border-box; z-index: 1000; }
-        .map-option { padding: 15px; border-bottom: 1px solid #EEE; text-align: center; font-size: 18px; color: var(--blue); font-weight: 500; }
-        .admin-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; background: white; border-radius: 24px; padding: 20px; box-shadow: 0 0 50px rgba(0,0,0,0.3); z-index: 2000; }
-        .admin-tag { display: inline-block; padding: 5px 10px; border-radius: 8px; margin: 3px; font-size: 12px; color: white; }
+        :root { --primary: #FF9500; /* 定義一個更高級的背景漸層 */--bg-gradient: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);--glass-bg: rgba(255, 255, 255, 0.7);}
+        body {background: var(--bg-gradient); background-attachment: fixed; min-height: 100vh; margin: 0; padding: env(safe-area-inset-top) 20px 20px;}
+        /* 讓主頁卡片變成毛玻璃質感 */
+        .menu-item {background: var(--glass-bg) !important;backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+                    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+                    border-radius: 28px !important;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;}
+        /* 優化 Emoji 圖標背景 */
+        .menu-item .icon { display: inline-flex; align-items: center;justify-content: center;width: 60px; height: 60px; background: rgba(255, 255, 255, 0.5);border-radius: 18px;margin-bottom: 15px;font-size: 35px !important;}
+        /* 決策結果容器 */
+        .result-container { background: var(--glass-bg) !important;backdrop-filter: blur(10px);border-radius: 30px !important;border: 2px dashed rgba(255, 149, 0, 0.5) !important;}
+        /* 頂部標題與按鈕優化 */
+        .header h2 { color: #444; font-weight: 700; letter-spacing: 1px;}
     </style>
 </head>
 <body>
