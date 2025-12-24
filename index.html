@@ -4,82 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAMAAAC8Y9NQAAAAflBMVEUAAAD///+ZzP8Anf8Aov8Amv8AlP8Aqv8Aru8Anv8Amf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8+S878AAAALHRSTlMAAgMEBQYICQoLDA0ODxITFBUWFxgZGhscHR4fICEiIyQlJicoKSorLC0uLzAyYm98AAADfklEQVR42u2b2ZKiMBSG6Y6ICwiCuyK7oiIu77/S6YI6pS0SuAnTOf9vXpIsS/6T9CStVAsLCwsLCwsLCwsLC5vIdI59f6E9yGofBclKjO8T36Y9x5ovp3W9v6D9L1Hk++Fm62v7X+K680U2qfX+gnSAnX6W6v0FCXp/QTrA82T6pPr67/8LkuM8nU6fA+MvSJDmP9Ppc+A9Vf8XJMn0fDqdPmP9X5CcTOfp9Bmz/oKkkOnV6TNR/xc0S86m06fA7P8LmmM6nz4DZv9f0DyfptOnwGf8Bcm5m6fT58Bl/AXJWZpOnwPn8RckZ0un0+fAefwFyVkt06fA97v6779z/3f0v/P0Of9vSJK5/f7D3P4/p86Xf9m+f9L5/knnf9L5/knnf9L5/knnf9L5/knnf9L5/knnf9L5/knnf9L5/knnf/L5fX069/90Wf/H38B1X7R+B8XnE4vPZ7Otz2Zdn82mPptVfTar+mxW9dlmS6U5WyrN2VJpzpZK602ltN5USutNpbTeVErrTaW03lRar7XGfK015mutMV9rjflaY77WGPu7mGv7u5hr+7uYa/u7mGv7u5hr+7uY6zNrrM+ssT6zxvrMGuszS6y9Zom11yyx9poly6+9Zvn/sSXL/48tWf5/bMny/2NLlv8fW7L879iS5X/Hlv0Y2Y+R/RjZj5H9GNmPkf0Y2Y+R/RjZj/FfjP9i/Bfjv8i6XWSV3v9R/m399/Xf139f/3399/Xf139f/3399/Xf13/fvK79fS6V6eey6ee0qWfLpp4Nm3oWbOoZsqknxaaeCJt6Amzqy7Sps6LOijoruqyosqLOiior6qyosqLOitqzYvf82D07ds+O3bNj9+zYPTt2z47ds2P37Ni99V67t9xr95Z77d5yr91b7rV7y712b7nX7i332r1NfS99p/0X+S/yX+S/yH+R/yL/Rf6L/Bf5L/Jf5L/Y0mRLky1NtjTZ0mRLky1NtjTZ0mRLky1NtjSZY5o5ZkYzw8xoZpAZTQwyw8hgMwwMNoPAYDMIDDZZZZNFFllkkUUWWWSRRRZZZJFFFllkkUUWWWSRRRY9iR5Ej6EH0UPoMfQQegy9jV5G76KX0avoXfQqeveS99DL6DX0MnoVvYreRS+iV9Gr6F30InoRvYhe/Vf9Ay7R9U9L6v9/AAAA//8DAIDU9P++nO5VAAAAAElFTkSuQmCC">
-    
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAMAAAC8Y9NQAAAAflBMVEUAAAD///+ZzP8Anf8Aov8Amv8AlP8Aqv8Aru8Anv8Amf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8Anf8+S878AAAALHRSTlMAAgMEBQYICQoLDA0ODxITFBUWFxgZGhscHR4fICEiIyQlJicoKSorLC0uLzAyYm98AAADfklEQVR42u2b2ZKiMBSG6Y6ICwiCuyK7oiIu77/S6YI6pS0SuAnTOf9vXpIsS/6T9CStVAsLCwsLCwsLCwsLC5vIdI59f6E9yGofBclKjO8T36Y9x5ovp3W9v6D9L1Hk++Fm62v7X+K680U2qfX+gnSAnX6W6v0FCXp/QTrA82T6pPr67/8LkuM8nU6fA+MvSJDmP9Ppc+A9Vf8XJMn0fDqdPmP9X5CcTOfp9Bmz/oKkkOnV6TNR/xc0S86m06fA7P8LmmM6nz4DZv9f0DyfptOnwGf8Bcm5m6fT58Bl/AXJWZpOnwPn8RckZ0un0+fAefwFyVkt06fA97v6779z/3f0v/P0Of9vSJK5/f7D3P4/p86Xf9m+f9L5/knnf9L5/knnf9L5/knnf9L5/knnf9L5/knnf9L5/knnf/L5fX069/90Wf/H38B1X7R+B8XnE4vPZ7Otz2Zdn82mPptVfTar+mxW9dlmS6U5WyrN2VJpzpZK602ltN5USutNpbTeVErrTaW03lRar7XGfK015mutMV9rjflaY77WGPu7mGv7u5hr+7uYa/u7mGv7u5hr+7uY6zNrrM+ssT6zxvrMGuszS6y9Zom11yyx9poly6+9Zvn/sSXL/48tWf5/bMny/2NLlv8fW7L879iS5X/Hlv0Y2Y+R/RjZj5H9GNmPkf0Y2Y+R/RjZj/FfjP9i/Bfjv8i6XWSV3v9R/m399/Xf139f/3399/Xf139f/3399/Xf13/fvK79fS6V6eey6ee0qWfLpp4Nm3oWbOoZsqknxaaeCJt6Amzqy7Sps6LOijoruqyosqLOiior6qyosqLOitqzYvf82D07ds+O3bNj9+zYPTt2z47ds2P37Ni99V67t9xr95Z77d5yr91b7rV7y712b7nX7i332r1NfS99p/0X+S/yX+S/yH+R/yL/Rf6L/Bf5L/Jf5L/Y0mRLky1NtjTZ0mRLky1NtjTZ0mRLky1NtjTZ0mRLky1NtjSZY5o5ZkYzw8xoZpAZTQwyw8hgMwwMNoPAYDMIDDZZZZNFFllkkUUWWWSRRRZZZJFFFllkkUUWWWSRRRY9iR5Ej6EH0UPoMfQQegy9jV5G76KX0avoXfQqeveS99DL6DX0MnoVvYreRS+iV9Gr6F30InoRvYhe/Vf9Ay7R9U9L6v9/AAAA//8DAIDU9P++nO5VAAAAAElFTkSuQmCC">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="吃貨神器">
-
+    
+    <title>吃貨神器 Pro</title>
     <style>
-        :root { --primary: #FF9500; --bg: #FFFFFF; }
+        :root { --primary: #FF9500; --bg: #FFFFFF; --light-gray: #F2F2F7; }
         
-        /* 修正黑邊關鍵 */
-        html, body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg);
-            height: 100%;
-            overflow: hidden;
-        }
-
+        /* 全螢幕背景與安全區域 */
+        html, body { margin: 0; padding: 0; background-color: var(--bg); min-height: 100%; overflow-x: hidden; }
         body { 
-            font-family: -apple-system, sans-serif; 
-            padding-top: env(safe-area-inset-top); 
-            display: flex; 
-            justify-content: center;
-            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding-top: env(safe-area-inset-top);
+            display: flex; justify-content: center; box-sizing: border-box;
         }
 
-        .container { 
-            background: white; 
-            width: 100%; 
-            max-width: 450px; 
-            padding: 20px;
-            text-align: center;
-        }
+        .container { background: white; width: 100%; max-width: 450px; padding: 20px; text-align: center; }
 
-        /* 輸入與類別樣式 */
+        /* 輸入框與標籤 */
         .input-group { display: flex; gap: 8px; margin-bottom: 15px; }
-        input { flex: 1; border: 1.5px solid #D1D1D6; border-radius: 12px; padding: 12px; font-size: 16px; outline: none; }
-        .add-btn { background: var(--primary); color: white; border: none; padding: 0 15px; border-radius: 12px; font-weight: bold; }
+        input { flex: 1; border: 1.5px solid #D1D1D6; border-radius: 14px; padding: 12px; font-size: 16px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
+        .add-btn { background: var(--primary); color: white; border: none; padding: 0 18px; border-radius: 14px; font-weight: bold; }
         
         .tabs { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
-        .tab { white-space: nowrap; padding: 8px 16px; background: #F2F2F7; border-radius: 20px; font-size: 14px; cursor: pointer; color: #666; }
-        .tab.active { background: var(--primary); color: white; font-weight: bold; }
+        .tab { white-space: nowrap; padding: 8px 18px; background: var(--light-gray); border-radius: 20px; font-size: 14px; cursor: pointer; color: #666; transition: 0.3s; }
+        .tab.active { background: var(--primary); color: white; font-weight: bold; transform: scale(1.05); }
 
-        /* 結果卡片 */
-        .result-card { background: #FFF9F0; border: 2px dashed var(--primary); border-radius: 24px; padding: 35px 15px; margin-bottom: 20px; }
-        #resultValue { font-size: 42px; font-weight: bold; color: #FF4500; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+        /* 結果展示 */
+        .result-card { background: #FFF9F0; border: 2.5px dashed var(--primary); border-radius: 28px; padding: 35px 15px; margin-bottom: 20px; position: relative; }
+        #resultValue { font-size: 42px; font-weight: 800; color: #FF4500; min-height: 65px; display: flex; align-items: center; justify-content: center; }
         
-        /* 按鈕網格 */
-        .search-options { display: none; margin-top: 20px; border-top: 1px solid #EEE; padding-top: 20px; animation: fadeIn 0.4s; }
+        /* 按鈕與搜尋 */
+        .search-options { display: none; margin-top: 20px; border-top: 1px solid #EEE; padding-top: 20px; animation: slideUp 0.4s ease-out; }
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .btn { border: none; border-radius: 14px; padding: 15px; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; color: white; }
-        .main-btn { background: #1C1C1E; width: 100%; font-size: 20px; padding: 18px; margin-top: 10px; }
+        .btn { border: none; border-radius: 16px; padding: 16px; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; color: white; transition: 0.2s; }
+        .btn:active { transform: scale(0.96); opacity: 0.9; }
+        .main-btn { background: #1C1C1E; width: 100%; font-size: 20px; padding: 20px; margin-top: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         
         .btn-meituan { background: #FFD000; color: #333; }
         .btn-dianping { background: #FF6633; }
         .btn-eleme { background: #0089FF; }
-        .btn-google { background: #34A853; }
-        .btn-share { background: #5856D6; grid-column: span 2; margin-top: 5px; }
+        .btn-share { background: #5856D6; grid-column: span 2; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* 歷史足跡樣式 */
+        .history-section { margin-top: 30px; text-align: left; }
+        .history-title { font-size: 16px; font-weight: bold; color: #8E8E93; margin-bottom: 10px; padding-left: 5px; }
+        .history-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .history-item { background: #F2F2F7; padding: 6px 12px; border-radius: 10px; font-size: 13px; color: #444; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="margin-top:0;">🍴 吃貨神器 Pro</h2>
+    <h2 style="margin: 0 0 20px 0; font-size: 26px;">🍴 吃貨神器 Pro</h2>
 
     <div class="input-group">
-        <input type="text" id="customInput" placeholder="新增私藏菜色...">
+        <input type="text" id="customInput" placeholder="這家也很好吃...">
         <button class="add-btn" onclick="addCustom()">新增</button>
     </div>
 
     <div class="tabs" id="tabGroup">
         <div class="tab active" onclick="switchTheme('custom', this)">我的清單</div>
-        <div class="tab" onclick="switchTheme('classic', this)">經典推薦</div>
-        <div class="tab" onclick="switchTheme('chinese', this)">中式料理</div>
+        <div class="tab" onclick="switchTheme('classic', this)">熱門推薦</div>
+        <div class="tab" onclick="switchTheme('chinese', this)">中式口味</div>
     </div>
 
     <div class="result-card">
@@ -89,24 +80,35 @@
                 <a id="linkMeituan" class="btn btn-meituan">美團搜尋</a>
                 <a id="linkDianping" class="btn btn-dianping">大眾點評</a>
                 <a id="linkEleme" class="btn btn-eleme">餓了麼</a>
-                <a id="linkGoogle" class="btn btn-google">Google</a>
-                <button class="btn btn-share" onclick="shareResult()">📤 分享給好友</button>
+                <button class="btn btn-share" onclick="shareResult()">📤 分享給朋友</button>
             </div>
         </div>
     </div>
 
     <button class="main-btn btn" onclick="roll()">開始隨機抽選</button>
+
+    <div class="history-section">
+        <div class="history-title">最近抽中</div>
+        <div class="history-list" id="historyList">
+            </div>
+    </div>
 </div>
 
 <script>
-    let myChoices = JSON.parse(localStorage.getItem('myChoices')) || ["火鍋", "壽司", "炸雞"];
+    let myChoices = JSON.parse(localStorage.getItem('myChoices')) || ["火鍋", "壽司", "燒肉"];
+    let history = JSON.parse(localStorage.getItem('foodHistory')) || [];
+
     const database = {
         custom: myChoices,
-        classic: ["漢堡", "牛排", "牛肉麵", "小籠包", "義大利麵"],
-        chinese: ["川菜", "粵菜", "湘菜", "東北菜", "江浙菜"]
+        classic: ["漢堡", "炸雞", "牛排", "義大利麵", "拉麵"],
+        chinese: ["酸菜魚", "麻辣燙", "小籠包", "滷肉飯", "水餃"]
     };
+
     let currentKey = 'custom';
     let finalChoice = "";
+
+    // 初始化顯示歷史
+    updateHistoryUI();
 
     function switchTheme(key, el) {
         currentKey = key;
@@ -123,7 +125,7 @@
             database.custom.push(val);
             localStorage.setItem('myChoices', JSON.stringify(database.custom));
             input.value = "";
-            alert("已成功加入！");
+            switchTheme('custom', document.querySelector('.tab'));
         }
     }
 
@@ -141,10 +143,25 @@
                 clearInterval(timer);
                 finalChoice = list[Math.floor(Math.random() * list.length)];
                 display.innerText = "✨ " + finalChoice;
+                
+                // 記錄歷史
+                addToHistory(finalChoice);
                 updateSearchLinks(finalChoice);
                 searchGroup.style.display = 'block';
             }
         }, 80);
+    }
+
+    function addToHistory(name) {
+        history.unshift(name); // 加到開頭
+        if (history.length > 5) history.pop(); // 只留 5 個
+        localStorage.setItem('foodHistory', JSON.stringify(history));
+        updateHistoryUI();
+    }
+
+    function updateHistoryUI() {
+        const listEl = document.getElementById('historyList');
+        listEl.innerHTML = history.map(item => `<span class="history-item">${item}</span>`).join('');
     }
 
     function updateSearchLinks(keyword) {
@@ -152,12 +169,11 @@
         document.getElementById('linkMeituan').href = `imeituan://www.meituan.com/s/s?w=${encoded}`;
         document.getElementById('linkDianping').href = `dianping://search?keyword=${encoded}`;
         document.getElementById('linkEleme').href = `eleme://search?keyword=${encoded}`;
-        document.getElementById('linkGoogle').href = `https://www.google.com/maps/search/${encoded}`;
     }
 
     async function shareResult() {
         if (navigator.share) {
-            await navigator.share({ title: '今天吃什麼？', text: `我決定吃：${finalChoice}！`, url: window.location.href });
+            await navigator.share({ title: '決定了！', text: `今天就吃：${finalChoice}！`, url: window.location.href });
         }
     }
 </script>
