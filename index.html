@@ -9,13 +9,11 @@
     <title>決策助手 Pro</title>
     <style>
         :root { --primary: #FF9500; --bg: #F8F9FA; --card: #FFFFFF; --blue: #007AFF; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: env(safe-area-inset-top) 15px 20px; box-sizing: border-box; color: #333; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: env(safe-area-inset-top) 15px 20px; box-sizing: border-box; color: #333; -webkit-tap-highlight-color: transparent; }
         
-        /* 導航 */
         .header { text-align: center; padding: 15px 0; position: sticky; top: 0; background: var(--bg); z-index: 100; }
         .back-btn { position: absolute; left: 0; top: 18px; display: none; background: #EEE; border: none; padding: 6px 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
-        /* 九宮格主選單 */
         .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
         .menu-item { background: var(--card); border-radius: 24px; padding: 30px 15px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.04); transition: 0.2s; border: 1px solid rgba(0,0,0,0.02); }
         .menu-item:active { transform: scale(0.95); background: #F2F2F7; }
@@ -23,7 +21,6 @@
         .menu-item .label { font-weight: bold; font-size: 16px; color: #1C1C1E; }
         .menu-item.hero { grid-column: span 2; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 35px; background: linear-gradient(135deg, #ffffff 0%, #fff5e6 100%); }
 
-        /* 分類、輸入與標籤頁 */
         .controls { margin-bottom: 15px; }
         .input-row { display: flex; gap: 8px; margin-bottom: 15px; }
         input { flex: 1; border: 1.5px solid #D1D1D6; border-radius: 12px; padding: 12px; font-size: 15px; outline: none; }
@@ -32,26 +29,23 @@
         .tab-item { white-space: nowrap; padding: 8px 16px; background: #E5E5EA; border-radius: 20px; font-size: 13px; cursor: pointer; color: #3A3A3C; }
         .tab-item.active { background: var(--primary); color: white; font-weight: bold; }
 
-        /* 結果顯示 */
-        .result-container { background: #FFF; border: 2.5px dashed var(--primary); border-radius: 28px; padding: 40px 15px; text-align: center; margin: 15px 0; min-height: 80px; display: flex; flex-direction: column; justify-content: center; }
+        .result-container { background: #FFF; border: 2.5px dashed var(--primary); border-radius: 28px; padding: 40px 15px; text-align: center; margin: 15px 0; min-height: 80px; display: flex; flex-direction: column; justify-content: center; position: relative; }
         .result-text { font-size: 38px; font-weight: 800; color: #FF4500; }
         
-        /* 按鈕與動作 */
-        .main-roll-btn { background: #1C1C1E; color: white; border: none; width: 100%; padding: 20px; border-radius: 18px; font-size: 20px; font-weight: bold; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .main-roll-btn { background: #1C1C1E; color: white; border: none; width: 100%; padding: 20px; border-radius: 18px; font-size: 20px; font-weight: bold; box-shadow: 0 10px 25px rgba(0,0,0,0.1); cursor: pointer; }
         .action-grid { display: none; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; animation: fadeInUp 0.4s; }
         .option-btn { padding: 14px; border-radius: 12px; text-decoration: none; color: white; font-size: 14px; text-align: center; font-weight: bold; border:none; cursor: pointer; }
 
-        /* 地圖選擇彈窗 */
         .map-modal { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-radius: 24px 24px 0 0; padding: 20px; box-sizing: border-box; box-shadow: 0 -10px 30px rgba(0,0,0,0.15); z-index: 1000; }
         .map-option { padding: 15px; border-bottom: 1px solid #EEE; text-align: center; font-size: 18px; color: var(--blue); font-weight: 500; }
         .map-option:last-child { border: none; }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 999; }
 
-        /* 歷史足跡 */
         .history-box { margin-top: 25px; text-align: left; }
         .history-title { font-size: 15px; font-weight: bold; color: #8E8E93; margin-bottom: 10px; }
         .history-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag { background: #E5E5EA; padding: 6px 12px; border-radius: 10px; font-size: 13px; color: #333; }
+        .tag { background: #E5E5EA; padding: 6px 12px; border-radius: 10px; font-size: 13px; color: #333; position: relative; }
+        .tag.remove::after { content: '×'; margin-left: 5px; color: #999; }
 
         .page { display: none; }
         .active-page { display: block; }
@@ -75,9 +69,9 @@
                 <span class="icon">🎡</span>
                 <span class="label">去哪玩兒</span>
             </div>
-            <div class="menu-item" onclick="goTo('dice', '🎲 隨機擲骰')">
-                <span class="icon">🎲</span>
-                <span class="label">隨機擲骰</span>
+            <div class="menu-item" onclick="goTo('dice', '💸 誰買單')">
+                <span class="icon">💸</span>
+                <span class="label">誰買單 / 聚會</span>
             </div>
             <div class="menu-item" onclick="goTo('truth', '💬 真心話')">
                 <span class="icon">💬</span>
@@ -91,7 +85,7 @@
     </div>
 
     <div id="toolPage" class="page">
-        <div class="controls">
+        <div class="controls" id="controlsArea">
             <div class="input-row">
                 <input type="text" id="toolInput" placeholder="自定義項目...">
                 <button class="add-btn" onclick="saveCustom()">新增</button>
@@ -103,17 +97,17 @@
             <div id="resultText" class="result-text">？</div>
         </div>
         
-        <button class="main-roll-btn" onclick="runRoll()">開始隨機抽取</button>
+        <button class="main-roll-btn" id="rollBtn" onclick="runRoll()">開始抽取</button>
 
         <div id="actionGrid" class="action-grid">
             <a id="linkM" class="option-btn food-only" style="background:#FFD000;color:#333">美團</a>
             <a id="linkD" class="option-btn food-only" style="background:#FF6633">點評</a>
-            <button class="option-btn play-only" style="background:#007AFF; grid-column: span 2;" onclick="showMapOptions()">打開導航/地圖</button>
-            <button class="option-btn" style="background:#5856D6; grid-column: span 2;" onclick="shareCurrent()">分享結果</button>
+            <button class="option-btn play-only" style="background:#007AFF; grid-column: span 2;" onclick="showMapOptions()">打開地圖導航</button>
+            <button class="option-btn" id="shareBtn" style="background:#5856D6; grid-column: span 2;" onclick="shareCurrent()">分享結果</button>
         </div>
 
-        <div class="history-box">
-            <div class="history-title">最近抽中</div>
+        <div class="history-box" id="historyArea">
+            <div class="history-title" id="historyTitle">最近抽中</div>
             <div class="history-tags" id="historyTags"></div>
         </div>
     </div>
@@ -129,7 +123,7 @@
     </div>
 
 <script>
-    // 1. 資料庫設計
+    // 1. 資料庫 (整合誰買單)
     let db = {
         food: {
             custom: JSON.parse(localStorage.getItem('f_custom')) || ["火鍋", "壽司", "炸雞"],
@@ -143,8 +137,12 @@
             outdoor: ["野餐", "單車遊", "逛公園", "海邊散步", "老街"],
             history: JSON.parse(localStorage.getItem('p_hist')) || []
         },
-        dice: { list: ["1", "2", "3", "4", "5", "6"] },
-        truth: { list: ["最後一張照片", "最尷尬的回憶", "心跳最快的一次", "現場對視10秒"] },
+        dice: {
+            bill: JSON.parse(localStorage.getItem('party_names')) || ["我", "朋友A", "朋友B"],
+            random: ["1", "2", "3", "4", "5", "6"],
+            history: [] // 聚會模式歷史紀錄
+        },
+        truth: { list: ["手機最後一張照片", "最尷尬的回憶", "心跳最快的一次", "現場對視10秒"] },
         dare: { list: ["學貓叫", "給第三人發訊息", "大聲唱歌", "做深蹲"] }
     };
 
@@ -152,9 +150,10 @@
     let currentTab = 'custom';
     let lastResult = '';
 
-    // 2. 導航邏輯
+    // 2. 導航
     function goTo(pageId, title) {
         currentPage = pageId;
+        currentTab = (pageId === 'dice') ? 'bill' : 'custom';
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
         document.getElementById('backBtn').style.display = 'block';
         document.getElementById('title').innerText = title;
@@ -163,6 +162,7 @@
         initTabs();
         renderHistory();
         resetResult();
+        updateUIStyles();
     }
 
     function goHome() {
@@ -172,15 +172,18 @@
         document.getElementById('title').innerText = '決策小助手';
     }
 
-    // 3. 標籤與自定義邏輯
+    // 3. 標籤與 UI 適配
     function initTabs() {
         const bar = document.getElementById('tabBar');
+        const input = document.getElementById('toolInput');
         bar.innerHTML = '';
-        if (currentPage === 'food' || currentPage === 'play') {
-            const tabs = currentPage === 'food' ? 
-                [['custom','我的'], ['hot','熱門'], ['chinese','中式']] : 
-                [['custom','我的'], ['indoor','室內'], ['outdoor','戶外']];
-            
+        
+        let tabs = [];
+        if (currentPage === 'food') tabs = [['custom','我的'], ['hot','熱門'], ['chinese','中式']];
+        else if (currentPage === 'play') tabs = [['custom','我的'], ['indoor','室內'], ['outdoor','戶外']];
+        else if (currentPage === 'dice') tabs = [['bill','誰買單'], ['random','擲骰子']];
+
+        if(tabs.length > 0) {
             tabs.forEach(([key, label]) => {
                 const div = document.createElement('div');
                 div.className = `tab-item ${currentTab === key ? 'active' : ''}`;
@@ -188,9 +191,10 @@
                 div.onclick = (e) => switchTab(key, e.target);
                 bar.appendChild(div);
             });
-            document.querySelector('.controls').style.display = 'block';
+            document.getElementById('controlsArea').style.display = 'block';
+            input.placeholder = (currentTab === 'bill') ? "輸入名字 (多個請用空格隔開)" : "自定義項目...";
         } else {
-            document.querySelector('.controls').style.display = 'none';
+            document.getElementById('controlsArea').style.display = 'none';
         }
     }
 
@@ -198,23 +202,48 @@
         currentTab = key;
         document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
         el.classList.add('active');
+        document.getElementById('toolInput').placeholder = (key === 'bill') ? "輸入名字 (空格隔開)" : "自定義項目...";
         resetResult();
+        renderHistory();
     }
 
-    function saveCustom() {
-        const val = document.getElementById('toolInput').value.trim();
-        if(val) {
-            db[currentPage].custom.push(val);
-            localStorage.setItem(`${currentPage === 'food' ? 'f' : 'p'}_custom`, JSON.stringify(db[currentPage].custom));
-            document.getElementById('toolInput').value = '';
-            alert("成功新增！");
+    function updateUIStyles() {
+        const histTitle = document.getElementById('historyTitle');
+        if(currentPage === 'dice' && currentTab === 'bill') {
+            histTitle.innerText = "參與名單 (點擊刪除)";
+        } else {
+            histTitle.innerText = "最近抽中";
         }
     }
 
-    // 4. 隨機邏輯
+    // 4. 自定義與儲存
+    function saveCustom() {
+        const val = document.getElementById('toolInput').value.trim();
+        if(!val) return;
+
+        if (currentPage === 'dice' && currentTab === 'bill') {
+            // 支持批量輸入名字
+            const names = val.split(/\s+/);
+            db.dice.bill = [...new Set([...db.dice.bill, ...names])];
+            localStorage.setItem('party_names', JSON.stringify(db.dice.bill));
+            renderHistory();
+        } else {
+            db[currentPage].custom.push(val);
+            localStorage.setItem(`${currentPage.charAt(0)}_custom`, JSON.stringify(db[currentPage].custom));
+        }
+        document.getElementById('toolInput').value = '';
+    }
+
+    function removeFromBill(name) {
+        db.dice.bill = db.dice.bill.filter(n => n !== name);
+        localStorage.setItem('party_names', JSON.stringify(db.dice.bill));
+        renderHistory();
+    }
+
+    // 5. 隨機抽取邏輯
     function runRoll() {
         let list = [];
-        if (currentPage === 'food' || currentPage === 'play') {
+        if (currentPage === 'food' || currentPage === 'play' || currentPage === 'dice') {
             list = db[currentPage][currentTab];
         } else {
             list = db[currentPage].list;
@@ -232,9 +261,9 @@
             if(i++ > 15) {
                 clearInterval(timer);
                 lastResult = list[Math.floor(Math.random() * list.length)];
-                resEl.innerText = "✨ " + lastResult;
+                resEl.innerText = (currentTab === 'bill' ? "💸 " : "✨ ") + lastResult;
                 showActions();
-                if (db[currentPage].history) addHistory(lastResult);
+                if (currentPage !== 'dice' || currentTab !== 'bill') addHistory(lastResult);
             }
         }, 60);
     }
@@ -252,7 +281,7 @@
         }
     }
 
-    // 5. 地圖深度連結與跳轉修復
+    // 6. 地圖修復
     function showMapOptions() {
         document.getElementById('mapModal').style.display = 'block';
         document.getElementById('overlay').style.display = 'block';
@@ -265,53 +294,40 @@
 
     function openMap(type) {
         const q = encodeURIComponent(lastResult);
-        let appUrl = '';
-        let webUrl = '';
-
+        let appUrl = '', webUrl = '';
         switch(type) {
-            case 'google': 
-                appUrl = `comgooglemaps://?q=${q}`; 
-                webUrl = `https://www.google.com/maps/search/${q}`;
-                break;
-            case 'apple': 
-                appUrl = `http://maps.apple.com/?q=${q}`; 
-                webUrl = `http://maps.apple.com/?q=${q}`;
-                break;
-            case 'gaode': 
-                appUrl = `iosamap://search?sourceApplication=foodapp&keywords=${q}&style=2`;
-                webUrl = `https://uri.amap.com/search?keyword=${q}`;
-                break;
-            case 'baidu': 
-                appUrl = `baidumap://map/search?query=${q}&src=webapp.food.decision`;
-                webUrl = `https://api.map.baidu.com/geocoder?address=${q}&output=html`;
-                break;
+            case 'google': appUrl = `comgooglemaps://?q=${q}`; webUrl = `https://www.google.com/maps/search/${q}`; break;
+            case 'apple': appUrl = `http://maps.apple.com/?q=${q}`; webUrl = `http://maps.apple.com/?q=${q}`; break;
+            case 'gaode': appUrl = `iosamap://search?sourceApplication=foodapp&keywords=${q}&style=2`; webUrl = `https://uri.amap.com/search?keyword=${q}`; break;
+            case 'baidu': appUrl = `baidumap://map/search?query=${q}&src=webapp.food.decision`; webUrl = `https://api.map.baidu.com/geocoder?address=${q}&output=html`; break;
         }
-        
         const startTime = Date.now();
         window.location.href = appUrl;
-
-        setTimeout(() => {
-            if (Date.now() - startTime < 2500) {
-                window.location.href = webUrl;
-            }
-        }, 2000);
-
+        setTimeout(() => { if (Date.now() - startTime < 2500) window.location.href = webUrl; }, 2000);
         closeMapOptions();
     }
 
-    // 6. 歷史紀錄
+    // 7. 歷史與名單渲染
     function addHistory(item) {
         let hist = db[currentPage].history;
+        if(!hist) return;
         hist.unshift(item);
         if(hist.length > 6) hist.pop();
-        localStorage.setItem(`${currentPage === 'food' ? 'f' : 'p'}_hist`, JSON.stringify(hist));
+        localStorage.setItem(`${currentPage.charAt(0)}_hist`, JSON.stringify(hist));
         renderHistory();
     }
 
     function renderHistory() {
         const box = document.getElementById('historyTags');
-        const hist = db[currentPage].history || [];
-        box.innerHTML = hist.map(h => `<span class="tag">${h}</span>`).join('');
+        updateUIStyles();
+
+        if (currentPage === 'dice' && currentTab === 'bill') {
+            // 渲染好友名單，帶刪除功能
+            box.innerHTML = db.dice.bill.map(n => `<span class="tag remove" onclick="removeFromBill('${n}')">${n}</span>`).join('');
+        } else {
+            const hist = db[currentPage].history || [];
+            box.innerHTML = hist.map(h => `<span class="tag">${h}</span>`).join('');
+        }
     }
 
     function resetResult() {
@@ -320,7 +336,9 @@
     }
 
     function shareCurrent() {
-        if(navigator.share) navigator.share({ title:'我的決定', text:`建議：${lastResult}！`, url:window.location.href });
+        let text = `我的決策助手建議：${lastResult}`;
+        if(currentTab === 'bill') text = `今天的冤大頭決定是：${lastResult}！快去買單～`;
+        if(navigator.share) navigator.share({ title:'決策結果', text: text, url:window.location.href });
     }
 </script>
 </body>
